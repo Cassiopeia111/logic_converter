@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Logic Converter (SOP ↔ POS)</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f2f5;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding-top: 50px;
+    }
+    .container {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        width: 550px;
+    }
+    h1, h3 {
+        text-align: center;
+    }
+    input, button, select {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        font-size: 16px;
+    }
+    .output, .truth-table {
+        background-color: #f9f9f9;
+        padding: 10px;
+        border-radius: 5px;
+        min-height: 50px;
+        margin-top: 10px;
+        overflow-x: auto;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+    th, td {
+        border: 1px solid #ccc;
+        padding: 5px;
+        text-align: center;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>Logic Converter (SOP ↔ POS)</h1>
+    <select id="mode">
+        <option value="SOPtoPOS">SOP → POS</option>
+        <option value="POStoSOP">POS → SOP</option>
+    </select>
+    <input type="text" id="expressionInput" placeholder="Enter expression">
+    <button onclick="convertExpression()">Convert</button>
+    <h3>Converted Expression:</h3>
+    <div class="output" id="convertedOutput"></div>
+    <h3>Truth Table:</h3>
+    <div class="truth-table" id="truthTable"></div>
+</div>
+
+<script>
+function isValidExpression(expr) {
+    return /^[A-Za-z0-9'()+ \*]+$/.test(expr);
+}
+
+function extractVariables(expr) {
+    const vars = new Set();
+    expr.split('').forEach(ch => {
+        if(/[A-Za-z]/.test(ch)) vars.add(ch.toUpperCase());
+    });
+    return Array.from(vars).sort();
+}
+
+// Evaluate SOP or POS for a given row
+function evaluateExpression(expr, row, variables, mode) {
+    const terms = mode === "SOPtoPOS" ? expr.split('+') : expr.match(/\([^\)]+\)/g);
+    let result = mode === "SOPtoPOS" ? 0 : 1;
+
+    terms.forEach(term => {
+        if (mode === "SOPtoPOS") {
+            let termVal = 1;
+            variables.forEach(v => {
+                if(term.includes(v + "'")) termVal &= 1 - row[v];
+                else if(term.includes(v)) termVal &= row[v];
+            });
+            result |= termVal;
+        } else { // POS to SOP
+            term = term.replace(/[()]/g,'');
+            let termVal = 0;
+            variables.forEach(v => {
+                if(term.includes(v + "'")) termVal |= 1 - row[v];
+                else if(term.includes(v)) termVal |= row[v];
+            });
+            result &= termVal;
+        }
+    });
+    return result;
+}
+
+function generateTruthTable(expr, variables, mode) {
+    const rows = [];
+    const n = variables.length;
+    const total = Math.pow(2, n);
+    for(let i=0; i<total; i++){
+        const row = {};
+        const bin = i.toString(2).padStart(n,'0');
+        variables.forEach((v,j) => row[v] = parseInt(bin[j]));
+        row['Value'] = evaluateExpression(expr, row, variables, mode);
+        rows.push(row);
+    }
+    return rows;
+}
+
+function tableToSOP(table, variables) {
+    const minterms = table.filter(r => r.Value === 1);
+    const terms = minterms.map(r => {
+        return variables.map(v => r[v] === 1 ? v : v + "'").join('');
+    });
+    return terms.join(' + ') || '0';
+}
+
+function tableToPOS(table, variables) {
+    const maxterms = table.filter(r => r.Value === 0);
+    const terms = maxterms.map(r => {
+        return '(' + variables.map(v => r[v] === 0 ? v : v + "'").join(' + ') + ')';
+    });
+    return terms.join('') || '1';
+}
+
+function displayTruthTable(table, variables) {
+    let html = '<table><tr>';
+    variables.forEach(v => html += `<th>${v}</th>`);
+    html += '<th>Value</th></tr>';
+    table.forEach(r => {
+        html += '<tr>';
+        variables.forEach(v => html += `<td>${r[v]}</td>`);
+        html += `<td>${r.Value}</td>`;
+        html += '</tr>';
+    });
+    html += '</table>';
+    return html;
+}
+
+function convertExpression() {
+    const expr = document.getElementById('expressionInput').value.trim();
+    const mode = document.getElementById('mode').value;
+    if(!expr){
+        alert("Enter an expression");
+        return;
+    }
+    if(!isValidExpression(expr)){
+        alert("Invalid characters in expression");
+        return;
+    }
+    const variables = extractVariables(expr);
+    const truthTable = generateTruthTable(expr, variables, mode);
+
+    let converted;
+    if(mode === "SOPtoPOS") converted = tableToPOS(truthTable, variables);
+    else converted = tableToSOP(truthTable, variables);
+
+    document.getElementById('convertedOutput').innerText = converted;
+    document.getElementById('truthTable').innerHTML = displayTruthTable(truthTable, variables);
+}
+</script>
+</body>
+</html>
