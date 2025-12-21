@@ -2,66 +2,211 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<title>Virtual Lab: SOP ↔ POS Converter</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Logic Converter (SOP ↔ POS)</title>
+
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f0f2f5;
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        padding-top: 50px;
-    }
-    .container {
-        background-color: #fff;
-        padding: 30px;
-        border-radius: 10px;
-        box-shadow: 0 0 15px rgba(0,0,0,0.1);
-        width: 550px;
-    }
-    h1, h3 {
-        text-align: center;
-    }
-    input, button, select {
-        width: 100%;
-        padding: 12px;
-        margin: 10px 0;
-        font-size: 16px;
-    }
-    .output, .truth-table {
-        background-color: #f9f9f9;
-        padding: 10px;
-        border-radius: 5px;
-        min-height: 50px;
-        margin-top: 10px;
-        overflow-x: auto;
-    }
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 10px;
-    }
-    th, td {
-        border: 1px solid #ccc;
-        padding: 5px;
-        text-align: center;
-    }
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+}
+
+/* Layout */
+.wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background: #1f2937;
+    color: #fff;
+    padding: 20px;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+.sidebar a {
+    display: block;
+    color: #ddd;
+    padding: 10px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+.sidebar a:hover {
+    background: #374151;
+}
+
+/* Content */
+.content {
+    flex: 1;
+    padding: 30px;
+    background: #fff;
+}
+
+section {
+    margin-bottom: 40px;
+}
+
+section h2 {
+    border-bottom: 2px solid #1f2937;
+    padding-bottom: 5px;
+}
+
+/* Simulator */
+.container {
+    background: #f9fafb;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 600px;
+}
+
+input, select, button {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+button {
+    background: #2563eb;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1d4ed8;
+}
+
+.output, .truth-table {
+    background: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 5px;
+    text-align: center;
+}
 </style>
 </head>
+
 <body>
-<div class="container">
-    <h1>Logic Converter (SOP ↔ POS)</h1>
-    <select id="mode">
-        <option value="SOPtoPOS">SOP → POS</option>
-        <option value="POStoSOP">POS → SOP</option>
-    </select>
-    <input type="text" id="expressionInput" placeholder="Enter expression">
-    <button onclick="convertExpression()">Convert</button>
-    <h3>Converted Expression:</h3>
-    <div class="output" id="convertedOutput"></div>
-    <h3>Truth Table:</h3>
-    <div class="truth-table" id="truthTable"></div>
+
+<div class="wrapper">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Virtual Lab</h2>
+        <a href="#aim">Aim</a>
+        <a href="#theory">Theory</a>
+        <a href="#pretest">Pre-Test</a>
+        <a href="#procedure">Procedure</a>
+        <a href="#simulator">Simulator</a>
+        <a href="#posttest">Post-Test</a>
+        <a href="#reference">Reference</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+
+        <section id="aim">
+            <h2>Aim</h2>
+            <p>
+                To design and implement a converter that converts a Boolean expression
+                from SOP (Sum of Products) to POS (Product of Sums) and vice versa using
+                truth table method.
+            </p>
+        </section>
+
+        <section id="theory">
+            <h2>Theory</h2>
+            <p>
+                SOP (Sum of Products) is a Boolean expression where multiple AND terms
+                are ORed together. POS (Product of Sums) is a Boolean expression where
+                multiple OR terms are ANDed together.
+            </p>
+            <p>
+                Conversion between SOP and POS can be done by generating the truth table
+                and identifying minterms and maxterms.
+            </p>
+        </section>
+
+        <section id="pretest">
+            <h2>Pre-Test</h2>
+            <ol>
+                <li>What is SOP form?</li>
+                <li>What is POS form?</li>
+                <li>What is a truth table?</li>
+            </ol>
+        </section>
+
+        <section id="procedure">
+            <h2>Procedure</h2>
+            <ol>
+                <li>Select the conversion mode (SOP → POS or POS → SOP).</li>
+                <li>Enter the Boolean expression.</li>
+                <li>Click on Convert.</li>
+                <li>Observe the converted expression and truth table.</li>
+            </ol>
+        </section>
+
+        <!-- Simulator -->
+        <section id="simulator">
+            <h2>Simulator</h2>
+
+            <div class="container">
+                <select id="mode">
+                    <option value="SOPtoPOS">SOP → POS</option>
+                    <option value="POStoSOP">POS → SOP</option>
+                </select>
+
+                <input type="text" id="expressionInput" placeholder="Example: A'B + AB'">
+
+                <button onclick="convertExpression()">Convert</button>
+
+                <h3>Converted Expression</h3>
+                <div class="output" id="convertedOutput"></div>
+
+                <h3>Truth Table</h3>
+                <div class="truth-table" id="truthTable"></div>
+            </div>
+        </section>
+
+        <section id="posttest">
+            <h2>Post-Test</h2>
+            <ol>
+                <li>How many minterms exist for 3 variables?</li>
+                <li>What is the POS form of A + B?</li>
+            </ol>
+        </section>
+
+        <section id="reference">
+            <h2>Reference</h2>
+            <ul>
+                <li>M. Morris Mano – Digital Design</li>
+                <li>NPTEL – Digital Logic Design</li>
+            </ul>
+        </section>
+
+    </div>
 </div>
 
 <script>
@@ -77,7 +222,6 @@ function extractVariables(expr) {
     return Array.from(vars).sort();
 }
 
-// Evaluate SOP or POS for a given row
 function evaluateExpression(expr, row, variables, mode) {
     const terms = mode === "SOPtoPOS" ? expr.split('+') : expr.match(/\([^\)]+\)/g);
     let result = mode === "SOPtoPOS" ? 0 : 1;
@@ -90,7 +234,7 @@ function evaluateExpression(expr, row, variables, mode) {
                 else if(term.includes(v)) termVal &= row[v];
             });
             result |= termVal;
-        } else { // POS to SOP
+        } else {
             term = term.replace(/[()]/g,'');
             let termVal = 0;
             variables.forEach(v => {
@@ -106,68 +250,54 @@ function evaluateExpression(expr, row, variables, mode) {
 function generateTruthTable(expr, variables, mode) {
     const rows = [];
     const n = variables.length;
-    const total = Math.pow(2, n);
-    for(let i=0; i<total; i++){
+    for(let i=0;i<2**n;i++){
         const row = {};
         const bin = i.toString(2).padStart(n,'0');
-        variables.forEach((v,j) => row[v] = parseInt(bin[j]));
-        row['Value'] = evaluateExpression(expr, row, variables, mode);
+        variables.forEach((v,j)=>row[v]=+bin[j]);
+        row.Value = evaluateExpression(expr,row,variables,mode);
         rows.push(row);
     }
     return rows;
 }
 
-function tableToSOP(table, variables) {
-    const minterms = table.filter(r => r.Value === 1);
-    const terms = minterms.map(r => {
-        return variables.map(v => r[v] === 1 ? v : v + "'").join('');
-    });
-    return terms.join(' + ') || '0';
+function tableToSOP(table, vars) {
+    return table.filter(r=>r.Value)
+        .map(r=>vars.map(v=>r[v]?v:v+"'").join(''))
+        .join(' + ') || '0';
 }
 
-function tableToPOS(table, variables) {
-    const maxterms = table.filter(r => r.Value === 0);
-    const terms = maxterms.map(r => {
-        return '(' + variables.map(v => r[v] === 0 ? v : v + "'").join(' + ') + ')';
-    });
-    return terms.join('') || '1';
+function tableToPOS(table, vars) {
+    return table.filter(r=>!r.Value)
+        .map(r=>'('+vars.map(v=>r[v]?v+"'":v).join(' + ')+')')
+        .join('') || '1';
 }
 
-function displayTruthTable(table, variables) {
-    let html = '<table><tr>';
-    variables.forEach(v => html += `<th>${v}</th>`);
-    html += '<th>Value</th></tr>';
-    table.forEach(r => {
-        html += '<tr>';
-        variables.forEach(v => html += `<td>${r[v]}</td>`);
-        html += `<td>${r.Value}</td>`;
-        html += '</tr>';
+function displayTruthTable(table, vars) {
+    let h='<table><tr>';
+    vars.forEach(v=>h+=`<th>${v}</th>`);
+    h+='<th>Value</th></tr>';
+    table.forEach(r=>{
+        h+='<tr>';
+        vars.forEach(v=>h+=`<td>${r[v]}</td>`);
+        h+=`<td>${r.Value}</td></tr>`;
     });
-    html += '</table>';
-    return html;
+    return h+'</table>';
 }
 
-function convertExpression() {
-    const expr = document.getElementById('expressionInput').value.trim();
+function convertExpression(){
+    const expr = expressionInput.value.trim();
     const mode = document.getElementById('mode').value;
-    if(!expr){
-        alert("Enter an expression");
-        return;
-    }
-    if(!isValidExpression(expr)){
-        alert("Invalid characters in expression");
-        return;
-    }
-    const variables = extractVariables(expr);
-    const truthTable = generateTruthTable(expr, variables, mode);
+    if(!expr || !isValidExpression(expr)) return alert("Invalid expression");
 
-    let converted;
-    if(mode === "SOPtoPOS") converted = tableToPOS(truthTable, variables);
-    else converted = tableToSOP(truthTable, variables);
+    const vars = extractVariables(expr);
+    const table = generateTruthTable(expr, vars, mode);
 
-    document.getElementById('convertedOutput').innerText = converted;
-    document.getElementById('truthTable').innerHTML = displayTruthTable(truthTable, variables);
+    convertedOutput.innerText =
+        mode==="SOPtoPOS" ? tableToPOS(table,vars) : tableToSOP(table,vars);
+
+    truthTable.innerHTML = displayTruthTable(table, vars);
 }
 </script>
+
 </body>
 </html>
