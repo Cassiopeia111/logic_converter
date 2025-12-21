@@ -1,303 +1,671 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Virtual Lab: SOP ↔ POS Converter</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f4f6f8;
-}
-
-/* Layout */
-.wrapper {
-    display: flex;
-    min-height: 100vh;
-}
-
-/* Sidebar */
-.sidebar {
-    width: 250px;
-    background: #1f2937;
-    color: #fff;
-    padding: 20px;
-}
-
-.sidebar h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 18px;
-}
-
-.sidebar a {
-    display: block;
-    color: #ddd;
-    padding: 10px;
-    text-decoration: none;
-    border-radius: 5px;
-    margin-bottom: 5px;
-}
-
-.sidebar a:hover {
-    background: #374151;
-}
-
-/* Content */
-.content {
-    flex: 1;
-    padding: 30px;
-    background: #fff;
-}
-
-section {
-    margin-bottom: 40px;
-}
-
-section h2 {
-    border-bottom: 2px solid #1f2937;
-    padding-bottom: 5px;
-}
-
-/* Simulator */
-.container {
-    background: #f9fafb;
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 600px;
-}
-
-input, select, button {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    font-size: 16px;
-}
-
-button {
-    background: #2563eb;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-button:hover {
-    background: #1d4ed8;
-}
-
-.output, .truth-table {
-    background: #fff;
-    padding: 10px;
-    border-radius: 5px;
-    margin-top: 10px;
-    overflow-x: auto;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-th, td {
-    border: 1px solid #ccc;
-    padding: 5px;
-    text-align: center;
-}
-</style>
-</head>
-
-<body>
-
-<div class="wrapper">
-
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <h2>Virtual Lab</h2>
-        <a href="#aim">Aim</a>
-        <a href="#theory">Theory</a>
-        <a href="#pretest">Pre-Test</a>
-        <a href="#procedure">Procedure</a>
-        <a href="#simulator">Simulator</a>
-        <a href="#posttest">Post-Test</a>
-        <a href="#reference">Reference</a>
-    </div>
-
-    <!-- Main Content -->
-    <div class="content">
-
-        <section id="aim">
-            <h2>Aim</h2>
-            <p>
-                To design and implement a converter that converts a Boolean expression
-                from SOP (Sum of Products) to POS (Product of Sums) and vice versa using
-                truth table method.
-            </p>
-        </section>
-
-        <section id="theory">
-            <h2>Theory</h2>
-            <p>
-                SOP (Sum of Products) is a Boolean expression where multiple AND terms
-                are ORed together. POS (Product of Sums) is a Boolean expression where
-                multiple OR terms are ANDed together.
-            </p>
-            <p>
-                Conversion between SOP and POS can be done by generating the truth table
-                and identifying minterms and maxterms.
-            </p>
-        </section>
-
-        <section id="pretest">
-            <h2>Pre-Test</h2>
-            <ol>
-                <li>What is SOP form?</li>
-                <li>What is POS form?</li>
-                <li>What is a truth table?</li>
-            </ol>
-        </section>
-
-        <section id="procedure">
-            <h2>Procedure</h2>
-            <ol>
-                <li>Select the conversion mode (SOP → POS or POS → SOP).</li>
-                <li>Enter the Boolean expression.</li>
-                <li>Click on Convert.</li>
-                <li>Observe the converted expression and truth table.</li>
-            </ol>
-        </section>
-
-        <!-- Simulator -->
-        <section id="simulator">
-            <h2>Simulator</h2>
-
-            <div class="container">
-                <select id="mode">
-                    <option value="SOPtoPOS">SOP → POS</option>
-                    <option value="POStoSOP">POS → SOP</option>
-                </select>
-
-                <input type="text" id="expressionInput" placeholder="Example: A'B + AB'">
-
-                <button onclick="convertExpression()">Convert</button>
-
-                <h3>Converted Expression</h3>
-                <div class="output" id="convertedOutput"></div>
-
-                <h3>Truth Table</h3>
-                <div class="truth-table" id="truthTable"></div>
-            </div>
-        </section>
-
-        <section id="posttest">
-            <h2>Post-Test</h2>
-            <ol>
-                <li>How many minterms exist for 3 variables?</li>
-                <li>What is the POS form of A + B?</li>
-            </ol>
-        </section>
-
-        <section id="reference">
-            <h2>Reference</h2>
-            <ul>
-                <li>M. Morris Mano – Digital Design</li>
-                <li>NPTEL – Digital Logic Design</li>
-            </ul>
-        </section>
-
-    </div>
-</div>
-
-<script>
-function isValidExpression(expr) {
-    return /^[A-Za-z0-9'()+ \*]+$/.test(expr);
-}
-
-function extractVariables(expr) {
-    const vars = new Set();
-    expr.split('').forEach(ch => {
-        if(/[A-Za-z]/.test(ch)) vars.add(ch.toUpperCase());
-    });
-    return Array.from(vars).sort();
-}
-
-function evaluateExpression(expr, row, variables, mode) {
-    const terms = mode === "SOPtoPOS" ? expr.split('+') : expr.match(/\([^\)]+\)/g);
-    let result = mode === "SOPtoPOS" ? 0 : 1;
-
-    terms.forEach(term => {
-        if (mode === "SOPtoPOS") {
-            let termVal = 1;
-            variables.forEach(v => {
-                if(term.includes(v + "'")) termVal &= 1 - row[v];
-                else if(term.includes(v)) termVal &= row[v];
-            });
-            result |= termVal;
-        } else {
-            term = term.replace(/[()]/g,'');
-            let termVal = 0;
-            variables.forEach(v => {
-                if(term.includes(v + "'")) termVal |= 1 - row[v];
-                else if(term.includes(v)) termVal |= row[v];
-            });
-            result &= termVal;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Lab: SOP ↔ POS Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-    });
-    return result;
-}
 
-function generateTruthTable(expr, variables, mode) {
-    const rows = [];
-    const n = variables.length;
-    for(let i=0;i<2**n;i++){
-        const row = {};
-        const bin = i.toString(2).padStart(n,'0');
-        variables.forEach((v,j)=>row[v]=+bin[j]);
-        row.Value = evaluateExpression(expr,row,variables,mode);
-        rows.push(row);
-    }
-    return rows;
-}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
 
-function tableToSOP(table, vars) {
-    return table.filter(r=>r.Value)
-        .map(r=>vars.map(v=>r[v]?v:v+"'").join(''))
-        .join(' + ') || '0';
-}
+        .wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
 
-function tableToPOS(table, vars) {
-    return table.filter(r=>!r.Value)
-        .map(r=>'('+vars.map(v=>r[v]?v+"'":v).join(' + ')+')')
-        .join('') || '1';
-}
+        /* Enhanced Sidebar */
+        .sidebar {
+            width: 280px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 2px 0 20px rgba(0,0,0,0.1);
+            padding: 30px 20px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+        }
 
-function displayTruthTable(table, vars) {
-    let h='<table><tr>';
-    vars.forEach(v=>h+=`<th>${v}</th>`);
-    h+='<th>Value</th></tr>';
-    table.forEach(r=>{
-        h+='<tr>';
-        vars.forEach(v=>h+=`<td>${r[v]}</td>`);
-        h+=`<td>${r.Value}</td></tr>`;
-    });
-    return h+'</table>';
-}
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+        }
 
-function convertExpression(){
-    const expr = expressionInput.value.trim();
-    const mode = document.getElementById('mode').value;
-    if(!expr || !isValidExpression(expr)) return alert("Invalid expression");
+        .logo h1 {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 24px;
+            font-weight: 700;
+        }
 
-    const vars = extractVariables(expr);
-    const table = generateTruthTable(expr, vars, mode);
+        .nav-menu {
+            list-style: none;
+        }
 
-    convertedOutput.innerText =
-        mode==="SOPtoPOS" ? tableToPOS(table,vars) : tableToSOP(table,vars);
+        .nav-item {
+            margin-bottom: 12px;
+        }
 
-    truthTable.innerHTML = displayTruthTable(table, vars);
-}
-</script>
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: #4a5568;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
 
+        .nav-link::before {
+            content: '';
+            width: 4px;
+            height: 0;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            border-radius: 2px;
+            transition: height 0.3s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .nav-link:hover::before,
+        .nav-link.active::before {
+            height: 100%;
+        }
+
+        .nav-icon {
+            margin-right: 12px;
+            font-size: 18px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 40px;
+            max-width: 1200px;
+        }
+
+        .content-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .content-header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #fff, #f7fafc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .content-header p {
+            color: #a0aec0;
+            font-size: 1.1rem;
+        }
+
+        /* Sections */
+        section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+
+        section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #2d3748;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        section h2::after {
+            content: '';
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            border-radius: 2px;
+        }
+
+        /* Simulator - Enhanced */
+        .simulator-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .control-panel {
+            background: linear-gradient(135deg, #f7fafc, #edf2f7);
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            border: 2px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        select, input[type="text"] {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        select:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* Results */
+        .results {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .result-card {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-top: 4px solid #667eea;
+        }
+
+        .result-card.pos {
+            border-top-color: #764ba2;
+        }
+
+        .result-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #2d3748;
+        }
+
+        .expression-output {
+            background: linear-gradient(135deg, #f7fafc, #edf2f7);
+            padding: 20px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            color: #2d3748;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed #e2e8f0;
+        }
+
+        /* Truth Table */
+        .truth-table-container {
+            grid-column: 1 / -1;
+            margin-top: 25px;
+        }
+
+        .truth-table-wrapper {
+            overflow-x: auto;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            font-family: 'Courier New', monospace;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 12px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
+            font-weight: 500;
+        }
+
+        tr:hover td {
+            background: #f7fafc;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .results {
+                grid-template-columns: 1fr;
+            }
+
+            .content-header h1 {
+                font-size: 2rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        section {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        section:nth-child(1) { animation-delay: 0.1s; }
+        section:nth-child(2) { animation-delay: 0.2s; }
+        section:nth-child(3) { animation-delay: 0.3s; }
+        section:nth-child(4) { animation-delay: 0.4s; }
+        section:nth-child(5) { animation-delay: 0.5s; }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar" id="sidebar">
+            <div class="logo">
+                <h1>Virtual Lab</h1>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="#aim" class="nav-link active"><span class="nav-icon">🎯</span>Aim</a></li>
+                <li class="nav-item"><a href="#theory" class="nav-link"><span class="nav-icon">📚</span>Theory</a></li>
+                <li class="nav-item"><a href="#pretest" class="nav-link"><span class="nav-icon">📝</span>Pre-Test</a></li>
+                <li class="nav-item"><a href="#procedure" class="nav-link"><span class="nav-icon">🔧</span>Procedure</a></li>
+                <li class="nav-item"><a href="#simulator" class="nav-link"><span class="nav-icon">⚡</span>Simulator</a></li>
+                <li class="nav-item"><a href="#posttest" class="nav-link"><span class="nav-icon">✅</span>Post-Test</a></li>
+                <li class="nav-item"><a href="#reference" class="nav-link"><span class="nav-icon">📖</span>Reference</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-header">
+                <h1>SOP ↔ POS Converter</h1>
+                <p>Convert Boolean expressions between Sum of Products and Product of Sums forms using truth table method</p>
+            </div>
+
+            <section id="aim">
+                <h2>Aim</h2>
+                <p>
+                    To design and implement a converter that transforms Boolean expressions from SOP (Sum of Products) 
+                    to POS (Product of Sums) form and vice versa using the truth table method, enabling better understanding 
+                    of digital logic design principles.
+                </p>
+            </section>
+
+            <section id="theory">
+                <h2>Theory</h2>
+                <div class="theory-content">
+                    <p><strong>SOP (Sum of Products):</strong> A Boolean expression where multiple product terms (AND operations) are summed (ORed) together. Each term represents a minterm where the function equals 1.</p>
+                    <p><strong>POS (Product of Sums):</strong> A Boolean expression where multiple sum terms (OR operations) are multiplied (ANDed) together. Each term represents a maxterm where the function equals 0.</p>
+                    <p>The conversion uses truth tables: SOP uses 1's (minterms), POS uses 0's (maxterms) from the same truth table.</p>
+                </div>
+            </section>
+
+            <section id="pretest">
+                <h2>Pre-Test</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                    <div class="quiz-card">
+                        <h4>Q1. What is SOP form?</h4>
+                        <p>A. Product of sums <br>B. Sum of products <strong style="color: #667eea;">✓</strong></p>
+                    </div>
+                    <div class="quiz-card">
+                        <h4>Q2. POS represents?</h4>
+                        <p>A. Product of maxterms <strong style="color: #667eea;">✓</strong> <br>B. Sum of minterms</p>
+                    </div>
+                    <div class="quiz-card">
+                        <h4>Q3. Truth table shows?</h4>
+                        <p>All possible input combinations and corresponding outputs <strong style="color: #667eea;">✓</strong></p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="procedure">
+                <h2>Procedure</h2>
+                <ol style="font-size: 1.1rem; line-height: 1.8; color: #4a5568;">
+                    <li>Select conversion direction (SOP → POS or POS → SOP) from the dropdown menu.</li>
+                    <li>Enter Boolean expression using variables A-Z, ' for complement, + for OR, juxtaposition for AND. Use parentheses for grouping.</li>
+                    <li>Click "Convert Expression" button to generate truth table and converted form.</li>
+                    <li>Verify results in both expression output and truth table visualization.</li>
+                </ol>
+                <div style="margin-top: 20px; padding: 20px; background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border-radius: 12px; border-left: 5px solid #667eea;">
+                    <strong>💡 Examples:</strong> <code>A'B + AB'</code> (SOP), <code>(A+B)(A'+B')</code> (POS)
+                </div>
+            </section>
+
+            <!-- Simulator Section -->
+            <section id="simulator">
+                <h2>Interactive Simulator</h2>
+                <div class="simulator-container">
+                    <div class="control-panel">
+                        <div class="form-group">
+                            <label>Conversion Mode</label>
+                            <select id="mode">
+                                <option value="SOPtoPOS">SOP → POS</option>
+                                <option value="POStoSOP">POS → SOP</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Boolean Expression</label>
+                            <input type="text" id="expressionInput" placeholder="Enter expression: A'B + AB' or (A+B)(A'+B')" value="A'B + AB'">
+                        </div>
+                        <button class="btn" onclick="convertExpression()">🔄 Convert Expression</button>
+                    </div>
+
+                    <div class="results" id="resultsContainer" style="display: none;">
+                        <div class="result-card">
+                            <div class="result-title">📤 Input Form</div>
+                            <div class="expression-output" id="inputOutput"></div>
+                        </div>
+                        <div class="result-card pos">
+                            <div class="result-title">📥 Converted Form</div>
+                            <div class="expression-output" id="convertedOutput">Click Convert to see result</div>
+                        </div>
+                    </div>
+
+                    <div class="truth-table-container">
+                        <div class="result-card" style="grid-column: 1 / -1;">
+                            <div class="result-title">📊 Truth Table Verification</div>
+                            <div class="truth-table-wrapper">
+                                <div id="truthTable"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="posttest">
+                <h2>Post-Test</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                    <div class="quiz-card">
+                        <h4>Q1. For 3 variables, how many minterms?</h4>
+                        <p><strong>8</strong> (2³) <span style="color: #667eea;">✓</strong></p>
+                    </div>
+                    <div class="quiz-card">
+                        <h4>Q2. POS form of A + B (2-var)?</h4>
+                        <p><code>(A+B)(A'+B)(A+B')</code> <span style="color: #667eea;">✓</strong></p>
+                    </div>
+                    <div class="quiz-card">
+                        <h4>Q3. SOP uses which truth table values?</h4>
+                        <p>1's (minterms) <strong style="color: #667eea;">✓</strong></p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="reference">
+                <h2>References</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                    <div class="ref-card">
+                        <h4>📘 Textbooks</h4>
+                        <ul style="color: #4a5568;">
+                            <li>M. Morris Mano – Digital Design</li>
+                            <li>Thomas L. Floyd – Digital Fundamentals</li>
+                        </ul>
+                    </div>
+                    <div class="ref-card">
+                        <h4>🌐 Online Resources</h4>
+                        <ul style="color: #4a5568;">
+                            <li>NPTEL Digital Logic Design</li>
+                            <li>Virtual Labs IIT Kharagpur [web:8]</li>
+                        </ul>
+                    </div>
+                    <div class="ref-card">
+                        <h4>🛠 Tools</h4>
+                        <ul style="color: #4a5568;">
+                            <li>Boolean Algebra Calculators [web:3][web:6]</li>
+                            <li>Digital Logic Simulators</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Enhanced JavaScript with better error handling and UX
+        function isValidExpression(expr) {
+            // Improved regex for Boolean expressions
+            return /^[A-Za-z0-9'()+\s*]+$/.test(expr.replace(/\s/g, ''));
+        }
+
+        function extractVariables(expr) {
+            const vars = new Set();
+            const cleaned = expr.replace(/['()+\s]/g, '');
+            cleaned.split('').forEach(ch => {
+                if(/[A-Za-z]/.test(ch)) vars.add(ch.toUpperCase());
+            });
+            return Array.from(vars).sort();
+        }
+
+        function evaluateSOP(expr, row, variables) {
+            const terms = expr.split('+').map(t => t.trim()).filter(t => t);
+            let result = 0;
+            terms.forEach(term => {
+                let termVal = 1;
+                variables.forEach(v => {
+                    if (term.includes(v + "'")) termVal = termVal && (1 - row[v]);
+                    else if (term.includes(v)) termVal = termVal && row[v];
+                });
+                result = result || termVal;
+            });
+            return result;
+        }
+
+        function evaluatePOS(expr, row, variables) {
+            const terms = expr.match(/\([^)]+\)/g) || [expr];
+            let result = 1;
+            terms.forEach(term => {
+                const cleanTerm = term.replace(/[()]/g, '').trim();
+                let termVal = 0;
+                variables.forEach(v => {
+                    if (cleanTerm.includes(v + "'")) termVal = termVal || (1 - row[v]);
+                    else if (cleanTerm.includes(v)) termVal = termVal || row[v];
+                });
+                result = result && termVal;
+            });
+            return result;
+        }
+
+        function generateTruthTable(expr, variables, mode) {
+            const rows = [];
+            const n = variables.length;
+            for (let i = 0; i < Math.pow(2, n); i++) {
+                const row = {};
+                const bin = i.toString(2).padStart(n, '0');
+                variables.forEach((v, j) => row[v] = parseInt(bin[j]));
+                row.Value = mode === "SOPtoPOS" ? 
+                    evaluateSOP(expr, row, variables) : 
+                    evaluatePOS(expr, row, variables);
+                rows.push(row);
+            }
+            return rows;
+        }
+
+        function tableToSOP(table, vars) {
+            const minterms = table.filter(r => r.Value === 1);
+            if (minterms.length === 0) return '0';
+            return minterms.map(r => 
+                vars.map(v => r[v] ? v : v + "'").join('')
+            ).join(' + ');
+        }
+
+        function tableToPOS(table, vars) {
+            const maxterms = table.filter(r => r.Value === 0);
+            if (maxterms.length === 0) return '1';
+            return maxterms.map(r => 
+                '(' + vars.map(v => r[v] ? v + "'" : v).join(' + ') + ')'
+            ).join('');
+        }
+
+        function displayTruthTable(table, vars, mode) {
+            let html = '<table><thead><tr>';
+            vars.forEach(v => html += `<th>${v}</th>`);
+            html += '<th>F</th></tr></thead><tbody>';
+            
+            table.forEach((r, i) => {
+                html += '<tr>';
+                vars.forEach(v => html += `<td>${r[v]}</td>`);
+                html += `<td style="font-weight: ${r.Value ? 'bold' : 'normal'}; color: ${r.Value ? '#10b981' : '#ef4444'}">${r.Value}</td>`;
+                html += '</tr>';
+            });
+            html += '</tbody></table>';
+            return html;
+        }
+
+        function convertExpression() {
+            const expr = document.getElementById('expressionInput').value.trim();
+            const mode = document.getElementById('mode').value;
+            
+            if (!expr) {
+                alert('Please enter a Boolean expression');
+                return;
+            }
+            
+            if (!isValidExpression(expr)) {
+                alert('Invalid expression. Use A-Z, \' (complement), + (OR), () for grouping. Example: A\'B + AB\'');
+                return;
+            }
+
+            const vars = extractVariables(expr);
+            if (vars.length === 0 || vars.length > 4) {
+                alert('Use 1-4 variables (A-Z). Current: ' + vars.join(', '));
+                return;
+            }
+
+            const table = generateTruthTable(expr, vars, mode);
+            const inputForm = mode === "SOPtoPOS" ? expr : tableToSOP(table, vars);
+            const convertedForm = mode === "SOPtoPOS" ? tableToPOS(table, vars) : tableToSOP(table, vars);
+
+            // Update UI
+            document.getElementById('inputOutput').textContent = inputForm;
+            document.getElementById('convertedOutput').textContent = convertedForm;
+            document.getElementById('truthTable').innerHTML = displayTruthTable(table, vars, mode);
+            document.getElementById('resultsContainer').style.display = 'grid';
+
+            // Scroll to results
+            document.getElementById('simulator').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Navigation functionality
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                document.querySelector(targetId).scrollIntoView({ behavior: 'smooth' });
+                
+                // Update active state
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Auto-convert on Enter
+        document.getElementById('expressionInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') convertExpression();
+        });
+
+        // Initialize with example
+        window.onload = function() {
+            convertExpression();
+        };
+    </script>
 </body>
 </html>
