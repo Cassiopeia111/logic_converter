@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Virtual Lab: SOP ↔ POS Converter</title>
+    <title>SOP ↔ POS Converter</title>
     <style>
         * {
             margin: 0;
@@ -28,7 +29,7 @@
             width: 280px;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
-            box-shadow: 2px 0 20px rgba(0,0,0,0.1);
+            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
             padding: 30px 20px;
             position: fixed;
             height: 100vh;
@@ -134,14 +135,14 @@
             border-radius: 20px;
             padding: 30px;
             margin-bottom: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         section:hover {
             transform: translateY(-5px);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
         }
 
         section h2 {
@@ -188,7 +189,8 @@
             color: #4a5568;
         }
 
-        select, input[type="text"] {
+        select,
+        input[type="text"] {
             width: 100%;
             padding: 15px 20px;
             border: 2px solid #e2e8f0;
@@ -198,7 +200,8 @@
             background: white;
         }
 
-        select:focus, input[type="text"]:focus {
+        select:focus,
+        input[type="text"]:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
@@ -239,7 +242,7 @@
             background: white;
             padding: 25px;
             border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             border-top: 4px solid #667eea;
         }
 
@@ -277,7 +280,7 @@
         .truth-table-wrapper {
             overflow-x: auto;
             border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         table {
@@ -340,6 +343,7 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -350,28 +354,48 @@
             animation: fadeInUp 0.6s ease forwards;
         }
 
-        section:nth-child(1) { animation-delay: 0.1s; }
-        section:nth-child(2) { animation-delay: 0.2s; }
-        section:nth-child(3) { animation-delay: 0.3s; }
-        section:nth-child(4) { animation-delay: 0.4s; }
-        section:nth-child(5) { animation-delay: 0.5s; }
+        section:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        section:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        section:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        section:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        section:nth-child(5) {
+            animation-delay: 0.5s;
+        }
     </style>
 </head>
+
 <body>
     <div class="wrapper">
         <!-- Sidebar Navigation -->
         <nav class="sidebar" id="sidebar">
             <div class="logo">
-                <h1>Virtual Lab</h1>
+                <h1>Logic Converter</h1>
             </div>
             <ul class="nav-menu">
                 <li class="nav-item"><a href="#aim" class="nav-link active"><span class="nav-icon">🎯</span>Aim</a></li>
                 <li class="nav-item"><a href="#theory" class="nav-link"><span class="nav-icon">📚</span>Theory</a></li>
-                <li class="nav-item"><a href="#pretest" class="nav-link"><span class="nav-icon">📝</span>Pre-Test</a></li>
-                <li class="nav-item"><a href="#procedure" class="nav-link"><span class="nav-icon">🔧</span>Procedure</a></li>
-                <li class="nav-item"><a href="#simulator" class="nav-link"><span class="nav-icon">⚡</span>Simulator</a></li>
-                <li class="nav-item"><a href="#posttest" class="nav-link"><span class="nav-icon">✅</span>Post-Test</a></li>
-                <li class="nav-item"><a href="#reference" class="nav-link"><span class="nav-icon">📖</span>Reference</a></li>
+                <li class="nav-item"><a href="#pretest" class="nav-link"><span class="nav-icon">📝</span>Pre-Test</a>
+                </li>
+                <li class="nav-item"><a href="#procedure" class="nav-link"><span class="nav-icon">🔧</span>Procedure</a>
+                </li>
+                <li class="nav-item"><a href="#simulator" class="nav-link"><span class="nav-icon">⚡</span>Simulator</a>
+                </li>
+                <li class="nav-item"><a href="#posttest" class="nav-link"><span class="nav-icon">✅</span>Post-Test</a>
+                </li>
+                <li class="nav-item"><a href="#reference" class="nav-link"><span class="nav-icon">📖</span>Reference</a>
+                </li>
             </ul>
         </nav>
 
@@ -379,14 +403,16 @@
         <main class="main-content">
             <div class="content-header">
                 <h1>SOP ↔ POS Converter</h1>
-                <p>Convert Boolean expressions between Sum of Products and Product of Sums forms using truth table method</p>
+                <p>Convert Boolean expressions between Sum of Products and Product of Sums forms using truth table
+                    method</p>
             </div>
 
             <section id="aim">
                 <h2>Aim</h2>
                 <p>
-                    To design and implement a converter that transforms Boolean expressions from SOP (Sum of Products) 
-                    to POS (Product of Sums) form and vice versa using the truth table method, enabling better understanding 
+                    To design and implement a converter that transforms Boolean expressions from SOP (Sum of Products)
+                    to POS (Product of Sums) form and vice versa using the truth table method, enabling better
+                    understanding
                     of digital logic design principles.
                 </p>
             </section>
@@ -394,9 +420,14 @@
             <section id="theory">
                 <h2>Theory</h2>
                 <div class="theory-content">
-                    <p><strong>SOP (Sum of Products):</strong> A Boolean expression where multiple product terms (AND operations) are summed (ORed) together. Each term represents a minterm where the function equals 1.</p>
-                    <p><strong>POS (Product of Sums):</strong> A Boolean expression where multiple sum terms (OR operations) are multiplied (ANDed) together. Each term represents a maxterm where the function equals 0.</p>
-                    <p>The conversion uses truth tables: SOP uses 1's (minterms), POS uses 0's (maxterms) from the same truth table.</p>
+                    <p><strong>SOP (Sum of Products):</strong> A Boolean expression where multiple product terms (AND
+                        operations) are summed (ORed) together. Each term represents a minterm where the function equals
+                        1.</p>
+                    <p><strong>POS (Product of Sums):</strong> A Boolean expression where multiple sum terms (OR
+                        operations) are multiplied (ANDed) together. Each term represents a maxterm where the function
+                        equals 0.</p>
+                    <p>The conversion uses truth tables: SOP uses 1's (minterms), POS uses 0's (maxterms) from the same
+                        truth table.</p>
                 </div>
             </section>
 
@@ -413,7 +444,8 @@
                     </div>
                     <div class="quiz-card">
                         <h4>Q3. Truth table shows?</h4>
-                        <p>All possible input combinations and corresponding outputs <strong style="color: #667eea;">✓</strong></p>
+                        <p>All possible input combinations and corresponding outputs <strong
+                                style="color: #667eea;">✓</strong></p>
                     </div>
                 </div>
             </section>
@@ -422,11 +454,13 @@
                 <h2>Procedure</h2>
                 <ol style="font-size: 1.1rem; line-height: 1.8; color: #4a5568;">
                     <li>Select conversion direction (SOP → POS or POS → SOP) from the dropdown menu.</li>
-                    <li>Enter Boolean expression using variables A-Z, ' for complement, + for OR, juxtaposition for AND. Use parentheses for grouping.</li>
+                    <li>Enter Boolean expression using variables A-Z, ' for complement, + for OR, juxtaposition for AND.
+                        Use parentheses for grouping.</li>
                     <li>Click "Convert Expression" button to generate truth table and converted form.</li>
                     <li>Verify results in both expression output and truth table visualization.</li>
                 </ol>
-                <div style="margin-top: 20px; padding: 20px; background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border-radius: 12px; border-left: 5px solid #667eea;">
+                <div
+                    style="margin-top: 20px; padding: 20px; background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border-radius: 12px; border-left: 5px solid #667eea;">
                     <strong>💡 Examples:</strong> <code>A'B + AB'</code> (SOP), <code>(A+B)(A'+B')</code> (POS)
                 </div>
             </section>
@@ -445,7 +479,8 @@
                         </div>
                         <div class="form-group">
                             <label>Boolean Expression</label>
-                            <input type="text" id="expressionInput" placeholder="Enter expression: A'B + AB' or (A+B)(A'+B')" value="A'B + AB'">
+                            <input type="text" id="expressionInput"
+                                placeholder="Enter expression: A'B + AB' or (A+B)(A'+B')" value="A'B + AB'">
                         </div>
                         <button class="btn" onclick="convertExpression()">🔄 Convert Expression</button>
                     </div>
@@ -530,7 +565,7 @@
             const vars = new Set();
             const cleaned = expr.replace(/['()+\s]/g, '');
             cleaned.split('').forEach(ch => {
-                if(/[A-Za-z]/.test(ch)) vars.add(ch.toUpperCase());
+                if (/[A-Za-z]/.test(ch)) vars.add(ch.toUpperCase());
             });
             return Array.from(vars).sort();
         }
@@ -571,8 +606,8 @@
                 const row = {};
                 const bin = i.toString(2).padStart(n, '0');
                 variables.forEach((v, j) => row[v] = parseInt(bin[j]));
-                row.Value = mode === "SOPtoPOS" ? 
-                    evaluateSOP(expr, row, variables) : 
+                row.Value = mode === "SOPtoPOS" ?
+                    evaluateSOP(expr, row, variables) :
                     evaluatePOS(expr, row, variables);
                 rows.push(row);
             }
@@ -582,7 +617,7 @@
         function tableToSOP(table, vars) {
             const minterms = table.filter(r => r.Value === 1);
             if (minterms.length === 0) return '0';
-            return minterms.map(r => 
+            return minterms.map(r =>
                 vars.map(v => r[v] ? v : v + "'").join('')
             ).join(' + ');
         }
@@ -590,7 +625,7 @@
         function tableToPOS(table, vars) {
             const maxterms = table.filter(r => r.Value === 0);
             if (maxterms.length === 0) return '1';
-            return maxterms.map(r => 
+            return maxterms.map(r =>
                 '(' + vars.map(v => r[v] ? v + "'" : v).join(' + ') + ')'
             ).join('');
         }
@@ -599,7 +634,7 @@
             let html = '<table><thead><tr>';
             vars.forEach(v => html += `<th>${v}</th>`);
             html += '<th>F</th></tr></thead><tbody>';
-            
+
             table.forEach((r, i) => {
                 html += '<tr>';
                 vars.forEach(v => html += `<td>${r[v]}</td>`);
@@ -613,12 +648,12 @@
         function convertExpression() {
             const expr = document.getElementById('expressionInput').value.trim();
             const mode = document.getElementById('mode').value;
-            
+
             if (!expr) {
                 alert('Please enter a Boolean expression');
                 return;
             }
-            
+
             if (!isValidExpression(expr)) {
                 alert('Invalid expression. Use A-Z, \' (complement), + (OR), () for grouping. Example: A\'B + AB\'');
                 return;
@@ -646,11 +681,11 @@
 
         // Navigation functionality
         document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', function(e) {
+            link.addEventListener('click', function (e) {
                 e.preventDefault();
                 const targetId = this.getAttribute('href');
                 document.querySelector(targetId).scrollIntoView({ behavior: 'smooth' });
-                
+
                 // Update active state
                 document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
                 this.classList.add('active');
@@ -658,14 +693,15 @@
         });
 
         // Auto-convert on Enter
-        document.getElementById('expressionInput').addEventListener('keypress', function(e) {
+        document.getElementById('expressionInput').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') convertExpression();
         });
 
         // Initialize with example
-        window.onload = function() {
+        window.onload = function () {
             convertExpression();
         };
     </script>
 </body>
+
 </html>
