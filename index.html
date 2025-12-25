@@ -1,707 +1,311 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
+    <title>Virtual Lab – POS to SOP Converter</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOP ↔ POS Converter</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
+        body{background:#f8f9fa;color:#333;line-height:1.6}
+        .container{max-width:1200px;margin:0 auto;padding:0 20px}
+        header{background:linear-gradient(135deg,#2c3e50,#1a2530);color:#fff;padding:15px 0;
+            box-shadow:0 4px 12px rgba(0,0,0,0.1)}
+        .header-container{display:flex;justify-content:space-between;align-items:center}
+        .logo-section{display:flex;align-items:center;gap:25px}
+        .pcce-logo-container{display:flex;align-items:center;gap:15px;padding-right:25px;
+            border-right:2px solid rgba(255,255,255,0.2)}
+        .pcce-logo-img{width:60px;height:60px;object-fit:contain;border-radius:8px;
+            background:#fff;padding:5px;box-shadow:0 4px 8px rgba(0,0,0,0.2)}
+        .pcce-logo-text{display:flex;flex-direction:column}
+        .pcce-logo-text .main{font-size:18px;font-weight:700;color:#fff;line-height:1.2}
+        .pcce-logo-text .sub{font-size:12px;color:#ecf0f1;opacity:0.9;margin-top:2px}
+        .virtual-labs-logo{display:flex;align-items:center;gap:15px}
+        .virtual-labs-logo i{font-size:32px;color:#3498db}
+        .virtual-labs-logo h1{font-size:26px;font-weight:600}
+        .virtual-labs-logo span{color:#3498db}
+        .user-info{display:flex;align-items:center;gap:10px}
+        .user-info i{font-size:20px;color:#3498db}
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
-        }
+        .main-content{display:flex;margin-top:30px;gap:30px}
+        .sidebar{flex:0 0 280px;background:#fff;border-radius:8px;
+            box-shadow:0 4px 8px rgba(0,0,0,0.05);padding:20px 0;height:fit-content}
+        .sidebar h3{padding:0 20px 15px;color:#2c3e50;border-bottom:1px solid #eee;margin-bottom:15px}
+        .nav-menu{list-style:none}
+        .nav-item{padding:12px 25px;border-left:4px solid transparent;transition:0.3s;cursor:pointer;
+            display:flex;align-items:center;gap:12px}
+        .nav-item:hover{background:#f8f9fa;border-left-color:#3498db}
+        .nav-item.active{background:#f0f7ff;border-left-color:#3498db;color:#3498db;font-weight:500}
+        .nav-item i{width:20px;text-align:center}
 
-        .wrapper {
-            display: flex;
-            min-height: 100vh;
-        }
+        .content{flex:1;background:#fff;border-radius:8px;
+            box-shadow:0 4px 8px rgba(0,0,0,0.05);padding:30px;min-height:600px}
+        .content-header{margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid #eee}
+        .breadcrumb{font-size:14px;color:#7f8c8d;margin-bottom:5px}
+        .breadcrumb span{color:#3498db}
+        .content-header h2{font-size:26px;color:#2c3e50;font-weight:600}
+        .content-header p{color:#7f8c8d;margin-top:3px}
 
-        /* Enhanced Sidebar */
-        .sidebar {
-            width: 280px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
-            padding: 30px 20px;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-            z-index: 1000;
-        }
+        .section-page{display:none}
+        .section-page.active{display:block}
 
-        .logo {
-            text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #e2e8f0;
-        }
+        .question{margin-bottom:20px;padding:15px;border-radius:6px;background:#f8f9fa}
+        .question h4{margin-bottom:10px;color:#2c3e50}
+        .options label{display:block;margin-bottom:6px;cursor:pointer}
+        .check-btn{margin-top:8px;padding:6px 14px;border:none;border-radius:4px;
+            background:#3498db;color:#fff;cursor:pointer;font-size:14px}
+        .check-btn:hover{background:#2c80b9}
+        .feedback{margin-top:8px;font-weight:500}
+        .feedback.correct{color:#27ae60}
+        .feedback.wrong{color:#c0392b}
 
-        .logo h1 {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-size: 24px;
-            font-weight: 700;
-        }
+        .converter-card{background:#f8f9fa;padding:20px;border-radius:8px}
+        .converter-card label{display:block;margin-bottom:8px;font-weight:500}
+        .converter-card input{width:100%;padding:8px;border-radius:4px;border:1px solid #ccc;margin-bottom:12px}
+        .btn-main{background:linear-gradient(to right,#3498db,#2c80b9);color:#fff;border:none;
+            padding:10px 20px;border-radius:6px;cursor:pointer;font-size:15px}
+        .btn-main:hover{background:linear-gradient(to right,#2c80b9,#216794)}
 
-        .nav-menu {
-            list-style: none;
-        }
+        footer{margin-top:40px;padding:20px 0;text-align:center;color:#7f8c8d;font-size:14px;
+            border-top:1px solid #eee}
+        .footer-logo{font-weight:bold;color:#2c3e50}
 
-        .nav-item {
-            margin-bottom: 12px;
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            padding: 15px 20px;
-            color: #4a5568;
-            text-decoration: none;
-            border-radius: 12px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .nav-link::before {
-            content: '';
-            width: 4px;
-            height: 0;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            border-radius: 2px;
-            transition: height 0.3s ease;
-        }
-
-        .nav-link:hover,
-        .nav-link.active {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
-            color: #667eea;
-            transform: translateX(5px);
-        }
-
-        .nav-link:hover::before,
-        .nav-link.active::before {
-            height: 100%;
-        }
-
-        .nav-icon {
-            margin-right: 12px;
-            font-size: 18px;
-        }
-
-        /* Main Content */
-        .main-content {
-            margin-left: 280px;
-            flex: 1;
-            padding: 40px;
-            max-width: 1200px;
-        }
-
-        .content-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .content-header h1 {
-            font-size: 2.5rem;
-            background: linear-gradient(45deg, #fff, #f7fafc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-        }
-
-        .content-header p {
-            color: #a0aec0;
-            font-size: 1.1rem;
-        }
-
-        /* Sections */
-        section {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        section:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-        }
-
-        section h2 {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            color: #2d3748;
-            position: relative;
-            padding-bottom: 10px;
-        }
-
-        section h2::after {
-            content: '';
-            width: 60px;
-            height: 4px;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            border-radius: 2px;
-        }
-
-        /* Simulator - Enhanced */
-        .simulator-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .control-panel {
-            background: linear-gradient(135deg, #f7fafc, #edf2f7);
-            padding: 30px;
-            border-radius: 20px;
-            margin-bottom: 25px;
-            border: 2px solid rgba(102, 126, 234, 0.2);
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #4a5568;
-        }
-
-        select,
-        input[type="text"] {
-            width: 100%;
-            padding: 15px 20px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            background: white;
-        }
-
-        select:focus,
-        input[type="text"]:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        /* Results */
-        .results {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 25px;
-        }
-
-        .result-card {
-            background: white;
-            padding: 25px;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            border-top: 4px solid #667eea;
-        }
-
-        .result-card.pos {
-            border-top-color: #764ba2;
-        }
-
-        .result-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 15px;
-            color: #2d3748;
-        }
-
-        .expression-output {
-            background: linear-gradient(135deg, #f7fafc, #edf2f7);
-            padding: 20px;
-            border-radius: 12px;
-            font-family: 'Courier New', monospace;
-            font-size: 18px;
-            color: #2d3748;
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px dashed #e2e8f0;
-        }
-
-        /* Truth Table */
-        .truth-table-container {
-            grid-column: 1 / -1;
-            margin-top: 25px;
-        }
-
-        .truth-table-wrapper {
-            overflow-x: auto;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            font-family: 'Courier New', monospace;
-        }
-
-        th {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px 12px;
-            text-align: center;
-            font-weight: 600;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        td {
-            padding: 12px;
-            text-align: center;
-            border-bottom: 1px solid #e2e8f0;
-            font-weight: 500;
-        }
-
-        tr:hover td {
-            background: #f7fafc;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-                transition: transform 0.3s ease;
-            }
-
-            .sidebar.open {
-                transform: translateX(0);
-            }
-
-            .main-content {
-                margin-left: 0;
-                padding: 20px;
-            }
-
-            .results {
-                grid-template-columns: 1fr;
-            }
-
-            .content-header h1 {
-                font-size: 2rem;
-            }
-        }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        section {
-            animation: fadeInUp 0.6s ease forwards;
-        }
-
-        section:nth-child(1) {
-            animation-delay: 0.1s;
-        }
-
-        section:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        section:nth-child(3) {
-            animation-delay: 0.3s;
-        }
-
-        section:nth-child(4) {
-            animation-delay: 0.4s;
-        }
-
-        section:nth-child(5) {
-            animation-delay: 0.5s;
+        @media(max-width:992px){.main-content{flex-direction:column}.sidebar{width:100%}}
+        @media(max-width:768px){
+            .header-container{flex-direction:column;gap:20px;text-align:center}
+            .logo-section{flex-direction:column;gap:20px;width:100%}
+            .pcce-logo-container{border-right:none;padding-right:0;
+                border-bottom:2px solid rgba(255,255,255,0.2);padding-bottom:20px;justify-content:center;width:100%}
+            .virtual-labs-logo{justify-content:center}
         }
     </style>
 </head>
-
 <body>
-    <div class="wrapper">
-        <!-- Sidebar Navigation -->
-        <nav class="sidebar" id="sidebar">
-            <div class="logo">
-                <h1>Logic Converter</h1>
+<header>
+    <div class="container header-container">
+        <div class="logo-section">
+            <div class="pcce-logo-container">
+                <img src="https://raw.githubusercontent.com/dineshkute90/virtual_lab_LAUC/main/pccoe.png"
+                     alt="PCCOE Logo" class="pcce-logo-img">
+                <div class="pcce-logo-text">
+                    <div class="main">Applied Sciences &amp; Humanities</div>
+                    <div class="sub">Pimpri Chinchwad College of Engineering</div>
+                </div>
             </div>
-            <ul class="nav-menu">
-                <li class="nav-item"><a href="#aim" class="nav-link active"><span class="nav-icon">🎯</span>Aim</a></li>
-                <li class="nav-item"><a href="#theory" class="nav-link"><span class="nav-icon">📚</span>Theory</a></li>
-                <li class="nav-item"><a href="#pretest" class="nav-link"><span class="nav-icon">📝</span>Pre-Test</a>
-                </li>
-                <li class="nav-item"><a href="#procedure" class="nav-link"><span class="nav-icon">🔧</span>Procedure</a>
-                </li>
-                <li class="nav-item"><a href="#simulator" class="nav-link"><span class="nav-icon">⚡</span>Simulator</a>
-                </li>
-                <li class="nav-item"><a href="#posttest" class="nav-link"><span class="nav-icon">✅</span>Post-Test</a>
-                </li>
-                <li class="nav-item"><a href="#reference" class="nav-link"><span class="nav-icon">📖</span>Reference</a>
-                </li>
-            </ul>
-        </nav>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <div class="content-header">
-                <h1>SOP ↔ POS Converter</h1>
-                <p>Convert Boolean expressions between Sum of Products and Product of Sums forms using truth table
-                    method</p>
+            <div class="virtual-labs-logo">
+                <i class="fas fa-flask"></i>
+                <h1>Virtual <span>Labs</span></h1>
             </div>
-
-            <section id="aim">
-                <h2>Aim</h2>
-                <p>
-                    To design and implement a converter that transforms Boolean expressions from SOP (Sum of Products)
-                    to POS (Product of Sums) form and vice versa using the truth table method, enabling better
-                    understanding
-                    of digital logic design principles.
-                </p>
-            </section>
-
-            <section id="theory">
-                <h2>Theory</h2>
-                <div class="theory-content">
-                    <p><strong>SOP (Sum of Products):</strong> A Boolean expression where multiple product terms (AND
-                        operations) are summed (ORed) together. Each term represents a minterm where the function equals
-                        1.</p>
-                    <p><strong>POS (Product of Sums):</strong> A Boolean expression where multiple sum terms (OR
-                        operations) are multiplied (ANDed) together. Each term represents a maxterm where the function
-                        equals 0.</p>
-                    <p>The conversion uses truth tables: SOP uses 1's (minterms), POS uses 0's (maxterms) from the same
-                        truth table.</p>
-                </div>
-            </section>
-
-            <section id="pretest">
-                <h2>Pre-Test</h2>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
-                    <div class="quiz-card">
-                        <h4>Q1. What is SOP form?</h4>
-                        <p>A. Product of sums <br>B. Sum of products <strong style="color: #667eea;">✓</strong></p>
-                    </div>
-                    <div class="quiz-card">
-                        <h4>Q2. POS represents?</h4>
-                        <p>A. Product of maxterms <strong style="color: #667eea;">✓</strong> <br>B. Sum of minterms</p>
-                    </div>
-                    <div class="quiz-card">
-                        <h4>Q3. Truth table shows?</h4>
-                        <p>All possible input combinations and corresponding outputs <strong
-                                style="color: #667eea;">✓</strong></p>
-                    </div>
-                </div>
-            </section>
-
-            <section id="procedure">
-                <h2>Procedure</h2>
-                <ol style="font-size: 1.1rem; line-height: 1.8; color: #4a5568;">
-                    <li>Select conversion direction (SOP → POS or POS → SOP) from the dropdown menu.</li>
-                    <li>Enter Boolean expression using variables A-Z, ' for complement, + for OR, juxtaposition for AND.
-                        Use parentheses for grouping.</li>
-                    <li>Click "Convert Expression" button to generate truth table and converted form.</li>
-                    <li>Verify results in both expression output and truth table visualization.</li>
-                </ol>
-                <div
-                    style="margin-top: 20px; padding: 20px; background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border-radius: 12px; border-left: 5px solid #667eea;">
-                    <strong>💡 Examples:</strong> <code>A'B + AB'</code> (SOP), <code>(A+B)(A'+B')</code> (POS)
-                </div>
-            </section>
-
-            <!-- Simulator Section -->
-            <section id="simulator">
-                <h2>Interactive Simulator</h2>
-                <div class="simulator-container">
-                    <div class="control-panel">
-                        <div class="form-group">
-                            <label>Conversion Mode</label>
-                            <select id="mode">
-                                <option value="SOPtoPOS">SOP → POS</option>
-                                <option value="POStoSOP">POS → SOP</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Boolean Expression</label>
-                            <input type="text" id="expressionInput"
-                                placeholder="Enter expression: A'B + AB' or (A+B)(A'+B')" value="A'B + AB'">
-                        </div>
-                        <button class="btn" onclick="convertExpression()">🔄 Convert Expression</button>
-                    </div>
-
-                    <div class="results" id="resultsContainer" style="display: none;">
-                        <div class="result-card">
-                            <div class="result-title">📤 Input Form</div>
-                            <div class="expression-output" id="inputOutput"></div>
-                        </div>
-                        <div class="result-card pos">
-                            <div class="result-title">📥 Converted Form</div>
-                            <div class="expression-output" id="convertedOutput">Click Convert to see result</div>
-                        </div>
-                    </div>
-
-                    <div class="truth-table-container">
-                        <div class="result-card" style="grid-column: 1 / -1;">
-                            <div class="result-title">📊 Truth Table Verification</div>
-                            <div class="truth-table-wrapper">
-                                <div id="truthTable"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="posttest">
-                <h2>Post-Test</h2>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
-                    <div class="quiz-card">
-                        <h4>Q1. For 3 variables, how many minterms?</h4>
-                        <p><strong>8</strong> (2³) <span style="color: #667eea;">✓</strong></p>
-                    </div>
-                    <div class="quiz-card">
-                        <h4>Q2. POS form of A + B (2-var)?</h4>
-                        <p><code>(A+B)(A'+B)(A+B')</code> <span style="color: #667eea;">✓</strong></p>
-                    </div>
-                    <div class="quiz-card">
-                        <h4>Q3. SOP uses which truth table values?</h4>
-                        <p>1's (minterms) <strong style="color: #667eea;">✓</strong></p>
-                    </div>
-                </div>
-            </section>
-
-            <section id="reference">
-                <h2>References</h2>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
-                    <div class="ref-card">
-                        <h4>📘 Textbooks</h4>
-                        <ul style="color: #4a5568;">
-                            <li>M. Morris Mano – Digital Design</li>
-                            <li>Thomas L. Floyd – Digital Fundamentals</li>
-                        </ul>
-                    </div>
-                    <div class="ref-card">
-                        <h4>🌐 Online Resources</h4>
-                        <ul style="color: #4a5568;">
-                            <li>NPTEL Digital Logic Design</li>
-                            <li>Virtual Labs IIT Kharagpur [web:8]</li>
-                        </ul>
-                    </div>
-                    <div class="ref-card">
-                        <h4>🛠 Tools</h4>
-                        <ul style="color: #4a5568;">
-                            <li>Boolean Algebra Calculators [web:3][web:6]</li>
-                            <li>Digital Logic Simulators</li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-        </main>
+        </div>
+        <div class="user-info">
+            <i class="fas fa-user-circle"></i>
+            <span>Welcome, Student</span>
+        </div>
     </div>
+</header>
 
-    <script>
-        // Enhanced JavaScript with better error handling and UX
-        function isValidExpression(expr) {
-            // Improved regex for Boolean expressions
-            return /^[A-Za-z0-9'()+\s*]+$/.test(expr.replace(/\s/g, ''));
-        }
+<div class="container main-content">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h3>POS to SOP Converter</h3>
+        <ul class="nav-menu">
+            <li class="nav-item active" data-target="aim"><i class="fas fa-bullseye"></i><span>Aim</span></li>
+            <li class="nav-item" data-target="theory"><i class="fas fa-book"></i><span>Theory</span></li>
+            <li class="nav-item" data-target="pretest"><i class="fas fa-question-circle"></i><span>Pretest</span></li>
+            <li class="nav-item" data-target="simulation"><i class="fas fa-desktop"></i><span>Simulation</span></li>
+            <li class="nav-item" data-target="posttest"><i class="fas fa-clipboard-check"></i><span>Posttest</span></li>
+            <li class="nav-item" data-target="references"><i class="fas fa-book-open"></i><span>References</span></li>
+            <li class="nav-item" data-target="contributors"><i class="fas fa-users"></i><span>Contributors</span></li>
+            <li class="nav-item" data-target="feedback"><i class="fas fa-comment-alt"></i><span>Feedback</span></li>
+        </ul>
+    </aside>
 
-        function extractVariables(expr) {
-            const vars = new Set();
-            const cleaned = expr.replace(/['()+\s]/g, '');
-            cleaned.split('').forEach(ch => {
-                if (/[A-Za-z]/.test(ch)) vars.add(ch.toUpperCase());
-            });
-            return Array.from(vars).sort();
-        }
+    <!-- Content -->
+    <main class="content">
+        <div class="content-header">
+            <div class="breadcrumb">Digital Electronics &gt; <span>POS to SOP Converter</span></div>
+            <h2>POS to SOP Logic Converter</h2>
+            <p>Virtual Lab – Applied Sciences and Humanities</p>
+        </div>
 
-        function evaluateSOP(expr, row, variables) {
-            const terms = expr.split('+').map(t => t.trim()).filter(t => t);
-            let result = 0;
-            terms.forEach(term => {
-                let termVal = 1;
-                variables.forEach(v => {
-                    if (term.includes(v + "'")) termVal = termVal && (1 - row[v]);
-                    else if (term.includes(v)) termVal = termVal && row[v];
-                });
-                result = result || termVal;
-            });
-            return result;
-        }
+        <!-- AIM -->
+        <section id="aim" class="section-page active">
+            <h3>Aim</h3>
+            <p>To design and implement a virtual experiment that converts a 3‑variable Boolean expression in POS form to its equivalent SOP form.</p>
+        </section>
 
-        function evaluatePOS(expr, row, variables) {
-            const terms = expr.match(/\([^)]+\)/g) || [expr];
-            let result = 1;
-            terms.forEach(term => {
-                const cleanTerm = term.replace(/[()]/g, '').trim();
-                let termVal = 0;
-                variables.forEach(v => {
-                    if (cleanTerm.includes(v + "'")) termVal = termVal || (1 - row[v]);
-                    else if (cleanTerm.includes(v)) termVal = termVal || row[v];
-                });
-                result = result && termVal;
-            });
-            return result;
-        }
+        <!-- THEORY -->
+        <section id="theory" class="section-page">
+            <h3>Theory</h3>
+            <p>POS (Product of Sums) is an AND of OR terms, while SOP (Sum of Products) is an OR of AND terms.[web:5]</p>
+            <p>Conversion uses the relationship between maxterms and minterms for the same truth table.</p>
+        </section>
 
-        function generateTruthTable(expr, variables, mode) {
-            const rows = [];
-            const n = variables.length;
-            for (let i = 0; i < Math.pow(2, n); i++) {
-                const row = {};
-                const bin = i.toString(2).padStart(n, '0');
-                variables.forEach((v, j) => row[v] = parseInt(bin[j]));
-                row.Value = mode === "SOPtoPOS" ?
-                    evaluateSOP(expr, row, variables) :
-                    evaluatePOS(expr, row, variables);
-                rows.push(row);
-            }
-            return rows;
-        }
+        <!-- PRETEST -->
+        <section id="pretest" class="section-page">
+            <h3>Pretest</h3>
 
-        function tableToSOP(table, vars) {
-            const minterms = table.filter(r => r.Value === 1);
-            if (minterms.length === 0) return '0';
-            return minterms.map(r =>
-                vars.map(v => r[v] ? v : v + "'").join('')
-            ).join(' + ');
-        }
+            <div class="question" data-answer="b">
+                <h4>Q1. In POS form, each bracket represents:</h4>
+                <div class="options">
+                    <label><input type="radio" name="q1" value="a"> A product term (AND of literals)</label>
+                    <label><input type="radio" name="q1" value="b"> A sum term (OR of literals)</label>
+                    <label><input type="radio" name="q1" value="c"> A minterm</label>
+                    <label><input type="radio" name="q1" value="d"> A maxterm pair</label>
+                </div>
+                <button class="check-btn">Check answer</button>
+                <div class="feedback"></div>
+            </div>
 
-        function tableToPOS(table, vars) {
-            const maxterms = table.filter(r => r.Value === 0);
-            if (maxterms.length === 0) return '1';
-            return maxterms.map(r =>
-                '(' + vars.map(v => r[v] ? v + "'" : v).join(' + ') + ')'
-            ).join('');
-        }
+            <div class="question" data-answer="c">
+                <h4>Q2. Which of these is a valid POS expression?</h4>
+                <div class="options">
+                    <label><input type="radio" name="q2" value="a"> AB + C</label>
+                    <label><input type="radio" name="q2" value="b"> A + B + C</label>
+                    <label><input type="radio" name="q2" value="c"> (A + B)(A' + C)</label>
+                    <label><input type="radio" name="q2" value="d"> A'B + BC</label>
+                </div>
+                <button class="check-btn">Check answer</button>
+                <div class="feedback"></div>
+            </div>
+        </section>
 
-        function displayTruthTable(table, vars, mode) {
-            let html = '<table><thead><tr>';
-            vars.forEach(v => html += `<th>${v}</th>`);
-            html += '<th>F</th></tr></thead><tbody>';
+        <!-- SIMULATION -->
+        <section id="simulation" class="section-page">
+            <h3>Simulation – POS to SOP Converter</h3>
+            <div class="converter-card">
+                <p>Assume 3 variables: A, B, C.</p>
+                <label for="posInput">Enter POS expression (example: (A + B' + C)(A' + B + C'))</label>
+                <input id="posInput" type="text" placeholder="(A + B' + C)(A' + B + C')">
+                <button class="btn-main" id="convertBtn">Convert to SOP</button>
+                <h4 style="margin-top:15px;">SOP Output:</h4>
+                <div id="sopOutput">Result will appear here.</div>
+            </div>
+        </section>
 
-            table.forEach((r, i) => {
-                html += '<tr>';
-                vars.forEach(v => html += `<td>${r[v]}</td>`);
-                html += `<td style="font-weight: ${r.Value ? 'bold' : 'normal'}; color: ${r.Value ? '#10b981' : '#ef4444'}">${r.Value}</td>`;
-                html += '</tr>';
-            });
-            html += '</tbody></table>';
-            return html;
-        }
+        <!-- POSTTEST -->
+        <section id="posttest" class="section-page">
+            <h3>Posttest</h3>
 
-        function convertExpression() {
-            const expr = document.getElementById('expressionInput').value.trim();
-            const mode = document.getElementById('mode').value;
+            <div class="question" data-answer="d">
+                <h4>Q1. POS to SOP conversion essentially finds:</h4>
+                <div class="options">
+                    <label><input type="radio" name="pq1" value="a"> A different truth table</label>
+                    <label><input type="radio" name="pq1" value="b"> Only maxterms</label>
+                    <label><input type="radio" name="pq1" value="c"> Only minterms</label>
+                    <label><input type="radio" name="pq1" value="d"> An equivalent form with the same truth table</label>
+                </div>
+                <button class="check-btn">Check answer</button>
+                <div class="feedback"></div>
+            </div>
 
-            if (!expr) {
-                alert('Please enter a Boolean expression');
-                return;
-            }
+            <div class="question" data-answer="a">
+                <h4>Q2. For 3 variables, how many possible minterms exist?</h4>
+                <div class="options">
+                    <label><input type="radio" name="pq2" value="a"> 8</label>
+                    <label><input type="radio" name="pq2" value="b"> 4</label>
+                    <label><input type="radio" name="pq2" value="c"> 6</label>
+                    <label><input type="radio" name="pq2" value="d"> 2</label>
+                </div>
+                <button class="check-btn">Check answer</button>
+                <div class="feedback"></div>
+            </div>
+        </section>
 
-            if (!isValidExpression(expr)) {
-                alert('Invalid expression. Use A-Z, \' (complement), + (OR), () for grouping. Example: A\'B + AB\'');
-                return;
-            }
+        <!-- REFERENCES -->
+        <section id="references" class="section-page">
+            <h3>References</h3>
+            <ul>
+                <li>Digital Electronics textbooks discussing SOP and POS forms.[web:5]</li>
+                <li>Online tutorials on Boolean algebra and K‑maps.[web:1]</li>
+            </ul>
+        </section>
 
-            const vars = extractVariables(expr);
-            if (vars.length === 0 || vars.length > 4) {
-                alert('Use 1-4 variables (A-Z). Current: ' + vars.join(', '));
-                return;
-            }
+        <!-- CONTRIBUTORS -->
+        <section id="contributors" class="section-page">
+            <h3>Contributors</h3>
+            <p>Student: Your Name</p>
+            <p>Guide: Faculty, Applied Sciences and Humanities, PCCOE.</p>
+        </section>
 
-            const table = generateTruthTable(expr, vars, mode);
-            const inputForm = mode === "SOPtoPOS" ? expr : tableToSOP(table, vars);
-            const convertedForm = mode === "SOPtoPOS" ? tableToPOS(table, vars) : tableToSOP(table, vars);
+        <!-- FEEDBACK -->
+        <section id="feedback" class="section-page">
+            <h3>Feedback</h3>
+            <p>Share your experience with this virtual lab.</p>
+            <textarea id="fbText" rows="4" style="width:100%;padding:8px;border-radius:4px;border:1px solid #ccc;"></textarea>
+            <br><br>
+            <button class="btn-main" id="fbBtn">Submit Feedback</button>
+            <p id="fbMsg" style="margin-top:10px;"></p>
+        </section>
+    </main>
+</div>
 
-            // Update UI
-            document.getElementById('inputOutput').textContent = inputForm;
-            document.getElementById('convertedOutput').textContent = convertedForm;
-            document.getElementById('truthTable').innerHTML = displayTruthTable(table, vars, mode);
-            document.getElementById('resultsContainer').style.display = 'grid';
+<footer class="container">
+    <p>Virtual Labs &copy; 2025 | Applied Sciences &amp; Humanities Department |
+        <span class="footer-logo">Pimpri Chinchwad College of Engineering</span>
+    </p>
+</footer>
 
-            // Scroll to results
-            document.getElementById('simulator').scrollIntoView({ behavior: 'smooth' });
-        }
+<script>
+    // Sidebar navigation
+    const navItems = document.querySelectorAll('.nav-item');
+    const pages = document.querySelectorAll('.section-page');
 
-        // Navigation functionality
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                document.querySelector(targetId).scrollIntoView({ behavior: 'smooth' });
-
-                // Update active state
-                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-                this.classList.add('active');
+    navItems.forEach(item=>{
+        item.addEventListener('click',()=>{
+            navItems.forEach(i=>i.classList.remove('active'));
+            item.classList.add('active');
+            const target = item.getAttribute('data-target');
+            pages.forEach(p=>{
+                p.classList.toggle('active',p.id===target);
             });
         });
+    });
 
-        // Auto-convert on Enter
-        document.getElementById('expressionInput').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') convertExpression();
+    // MCQ checking (Pretest + Posttest)
+    document.querySelectorAll('.question').forEach(q=>{
+        const btn = q.querySelector('.check-btn');
+        const correct = q.dataset.answer;
+        const fb = q.querySelector('.feedback');
+        btn.addEventListener('click',()=>{
+            const name = q.querySelector('input[type="radio"]').name;
+            const checked = q.querySelector('input[name="'+name+'"]:checked');
+            if(!checked){
+                fb.textContent = 'Please select an option.';
+                fb.className='feedback';
+                return;
+            }
+            if(checked.value===correct){
+                fb.textContent='Correct!';
+                fb.className='feedback correct';
+            }else{
+                fb.textContent='Wrong answer. Try again.';
+                fb.className='feedback wrong';
+            }
         });
+    });
 
-        // Initialize with example
-        window.onload = function () {
-            convertExpression();
-        };
-    </script>
+    // Simple placeholder converter: just echoes input with a note
+    document.getElementById('convertBtn').addEventListener('click',()=>{
+        const pos = document.getElementById('posInput').value.trim();
+        const out = document.getElementById('sopOutput');
+        if(!pos){
+            out.textContent='Please enter a POS expression first.';
+            return;
+        }
+        // TODO: replace this with real 3‑variable POS→SOP logic using minterms/maxterms
+        out.textContent='(Demo) SOP equivalent for: '+pos+'  [You can now implement exact logic using minterms and K‑map].';
+    });
+
+    // Feedback
+    document.getElementById('fbBtn').addEventListener('click',()=>{
+        const txt=document.getElementById('fbText').value.trim();
+        const msg=document.getElementById('fbMsg');
+        if(!txt){msg.textContent='Please write some feedback.';return;}
+        msg.textContent='Thank you for your feedback!';
+    });
+</script>
 </body>
-
 </html>
