@@ -1,311 +1,591 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Virtual Lab – POS to SOP Converter</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Font Awesome -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
-        body{background:#f8f9fa;color:#333;line-height:1.6}
-        .container{max-width:1200px;margin:0 auto;padding:0 20px}
-        header{background:linear-gradient(135deg,#2c3e50,#1a2530);color:#fff;padding:15px 0;
-            box-shadow:0 4px 12px rgba(0,0,0,0.1)}
-        .header-container{display:flex;justify-content:space-between;align-items:center}
-        .logo-section{display:flex;align-items:center;gap:25px}
-        .pcce-logo-container{display:flex;align-items:center;gap:15px;padding-right:25px;
-            border-right:2px solid rgba(255,255,255,0.2)}
-        .pcce-logo-img{width:60px;height:60px;object-fit:contain;border-radius:8px;
-            background:#fff;padding:5px;box-shadow:0 4px 8px rgba(0,0,0,0.2)}
-        .pcce-logo-text{display:flex;flex-direction:column}
-        .pcce-logo-text .main{font-size:18px;font-weight:700;color:#fff;line-height:1.2}
-        .pcce-logo-text .sub{font-size:12px;color:#ecf0f1;opacity:0.9;margin-top:2px}
-        .virtual-labs-logo{display:flex;align-items:center;gap:15px}
-        .virtual-labs-logo i{font-size:32px;color:#3498db}
-        .virtual-labs-logo h1{font-size:26px;font-weight:600}
-        .virtual-labs-logo span{color:#3498db}
-        .user-info{display:flex;align-items:center;gap:10px}
-        .user-info i{font-size:20px;color:#3498db}
+<meta charset="UTF-8">
+<title>Virtual Lab – SOP ↔ POS Converter</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-        .main-content{display:flex;margin-top:30px;gap:30px}
-        .sidebar{flex:0 0 280px;background:#fff;border-radius:8px;
-            box-shadow:0 4px 8px rgba(0,0,0,0.05);padding:20px 0;height:fit-content}
-        .sidebar h3{padding:0 20px 15px;color:#2c3e50;border-bottom:1px solid #eee;margin-bottom:15px}
-        .nav-menu{list-style:none}
-        .nav-item{padding:12px 25px;border-left:4px solid transparent;transition:0.3s;cursor:pointer;
-            display:flex;align-items:center;gap:12px}
-        .nav-item:hover{background:#f8f9fa;border-left-color:#3498db}
-        .nav-item.active{background:#f0f7ff;border-left-color:#3498db;color:#3498db;font-weight:500}
-        .nav-item i{width:20px;text-align:center}
 
-        .content{flex:1;background:#fff;border-radius:8px;
-            box-shadow:0 4px 8px rgba(0,0,0,0.05);padding:30px;min-height:600px}
-        .content-header{margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid #eee}
-        .breadcrumb{font-size:14px;color:#7f8c8d;margin-bottom:5px}
-        .breadcrumb span{color:#3498db}
-        .content-header h2{font-size:26px;color:#2c3e50;font-weight:600}
-        .content-header p{color:#7f8c8d;margin-top:3px}
 
-        .section-page{display:none}
-        .section-page.active{display:block}
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Verdana,sans-serif}
+body{background:#f8f9fa;color:#333}
+.container{max-width:1200px;margin:auto;padding:0 20px}
 
-        .question{margin-bottom:20px;padding:15px;border-radius:6px;background:#f8f9fa}
-        .question h4{margin-bottom:10px;color:#2c3e50}
-        .options label{display:block;margin-bottom:6px;cursor:pointer}
-        .check-btn{margin-top:8px;padding:6px 14px;border:none;border-radius:4px;
-            background:#3498db;color:#fff;cursor:pointer;font-size:14px}
-        .check-btn:hover{background:#2c80b9}
-        .feedback{margin-top:8px;font-weight:500}
-        .feedback.correct{color:#27ae60}
-        .feedback.wrong{color:#c0392b}
 
-        .converter-card{background:#f8f9fa;padding:20px;border-radius:8px}
-        .converter-card label{display:block;margin-bottom:8px;font-weight:500}
-        .converter-card input{width:100%;padding:8px;border-radius:4px;border:1px solid #ccc;margin-bottom:12px}
-        .btn-main{background:linear-gradient(to right,#3498db,#2c80b9);color:#fff;border:none;
-            padding:10px 20px;border-radius:6px;cursor:pointer;font-size:15px}
-        .btn-main:hover{background:linear-gradient(to right,#2c80b9,#216794)}
 
-        footer{margin-top:40px;padding:20px 0;text-align:center;color:#7f8c8d;font-size:14px;
-            border-top:1px solid #eee}
-        .footer-logo{font-weight:bold;color:#2c3e50}
+/* Header */
+header{background:linear-gradient(135deg,#2c3e50,#1a2530);color:#fff;padding:15px 0;box-shadow:0 4px 12px rgba(0,0,0,0.1)}
+.header-container{display:flex;justify-content:space-between;align-items:center}
+.logo-section{display:flex;align-items:center;gap:25px}
+.pcce-logo-container{display:flex;align-items:center;gap:15px;padding-right:25px;border-right:2px solid rgba(255,255,255,0.2)}
+.pcce-logo-img{width:60px;height:60px;object-fit:contain;border-radius:8px;background:#fff;padding:5px;box-shadow:0 4px 8px rgba(0,0,0,0.2)}
+.pcce-logo-text{display:flex;flex-direction:column}
+.pcce-logo-text .main{font-size:20px;font-weight:700;color:#fff;line-height:1.2}
+.pcce-logo-text .sub{font-size:12px;color:#ecf0f1;opacity:0.9;margin-top:2px}
+.logic-converter-logo{display:flex;align-items:center;gap:15px}
+.logic-converter-logo i{font-size:30px;color:#3498db}
+.logic-converter-logo h1{font-size:26px}
+.logic-converter-logo span{color:#3498db}
+.user-info{display:flex;align-items:center;gap:10px}
+.user-info i{font-size:20px;color:#3498db}
 
-        @media(max-width:992px){.main-content{flex-direction:column}.sidebar{width:100%}}
-        @media(max-width:768px){
-            .header-container{flex-direction:column;gap:20px;text-align:center}
-            .logo-section{flex-direction:column;gap:20px;width:100%}
-            .pcce-logo-container{border-right:none;padding-right:0;
-                border-bottom:2px solid rgba(255,255,255,0.2);padding-bottom:20px;justify-content:center;width:100%}
-            .virtual-labs-logo{justify-content:center}
-        }
-    </style>
+
+
+/* Layout */
+.main-content{margin-top:30px}
+.content{
+    background:#fff;
+    border-radius:8px;
+    box-shadow:0 4px 8px rgba(0,0,0,0.05);
+    padding:30px;
+}
+
+
+
+/* Top tabs */
+.tab-bar{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-bottom:20px;
+    border-bottom:1px solid #eee;
+    padding-bottom:10px;
+}
+.tab-btn{
+    border:none;
+    background:#f0f4f8;
+    padding:8px 14px;
+    border-radius:4px;
+    cursor:pointer;
+    font-size:14px;
+}
+.tab-btn.active{
+    background:#3498db;
+    color:#fff;
+}
+
+
+
+.section-page{display:none}
+.section-page.active{display:block}
+#theory p{margin-bottom:25px;line-height:1.7}
+
+/* one-line gap under each section heading */
+.section-page h3{
+    margin-bottom:10px;
+}
+
+
+
+/* Cards */
+.question{background:#f8f9fa;padding:20px;border-radius:8px;margin-bottom:20px;border-left:4px solid #3498db}
+.question h4{margin-bottom:15px;color:#2c3e50;font-weight:600}
+.options{margin-bottom:15px}
+.options label{display:block;padding:12px;background:#fff;border-radius:6px;margin-bottom:8px;cursor:pointer;transition:background 0.2s}
+.options label:hover{background:#f0f7ff}
+.options input[type="radio"]{margin-right:12px;vertical-align:middle}
+.check-btn{background:#3498db;color:#fff;border:none;padding:10px 20px;border-radius:6px;cursor:pointer;font-weight:500;display:block;margin:15px auto 0;width:fit-content}
+.check-btn:hover{background:#2c80b9}
+.feedback{margin-top:12px;padding:12px;border-radius:6px;font-weight:500;text-align:center}
+.feedback.correct{color:#27ae60;background:#d5f4e6;border:1px solid #27ae60}
+.feedback.wrong{color:#c0392b;background:#fadbd8;border:1px solid #c0392b}
+
+
+
+/* Converter */
+.converter-card{background:#f8f9fa;padding:20px;border-radius:8px}
+input,select{width:100%;padding:8px;margin-bottom:10px}
+button.btn-main{background:#3498db;color:#fff;border:none;padding:10px;border-radius:6px;cursor:pointer}
+
+
+
+/* Table */
+table{width:100%;border-collapse:collapse;margin-top:10px}
+th,td{border:1px solid #ccc;padding:5px;text-align:center}
+
+
+
+/* Contributors */
+.contributors-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:20px;
+    margin-top:20px;
+}
+.contrib-card{
+    background:#f8f9fa;
+    border-radius:8px;
+    padding:15px;
+    text-align:center;
+    box-shadow:0 2px 6px rgba(0,0,0,0.05);
+}
+.contrib-card img{
+    width:120px;
+    height:120px;
+    object-fit:cover;
+    border-radius:50%;
+    margin-bottom:10px;
+    background:#ddd;
+}
+.contrib-card h4{
+    margin-bottom:4px;
+    font-size:16px;
+}
+.contrib-card p{
+    font-size:14px;
+    color:#555;
+}
+
+
+
+/* Footer */
+footer{text-align:center;margin-top:40px;padding:20px;color:#777}
+</style>
 </head>
+
+
+
 <body>
+
+
+
 <header>
-    <div class="container header-container">
-        <div class="logo-section">
-            <div class="pcce-logo-container">
-                <img src="https://raw.githubusercontent.com/dineshkute90/virtual_lab_LAUC/main/pccoe.png"
-                     alt="PCCOE Logo" class="pcce-logo-img">
-                <div class="pcce-logo-text">
-                    <div class="main">Applied Sciences &amp; Humanities</div>
-                    <div class="sub">Pimpri Chinchwad College of Engineering</div>
-                </div>
-            </div>
-            <div class="virtual-labs-logo">
-                <i class="fas fa-flask"></i>
-                <h1>Virtual <span>Labs</span></h1>
-            </div>
-        </div>
-        <div class="user-info">
-            <i class="fas fa-user-circle"></i>
-            <span>Welcome, Student</span>
-        </div>
+<div class="container header-container">
+  <div class="logo-section">
+    <div class="pcce-logo-container">
+      <img src="https://raw.githubusercontent.com/dineshkute90/virtual_lab_LAUC/main/pccoe.png"
+           alt="PCCOE Logo"
+           class="pcce-logo-img"
+           onerror="this.src='https://via.placeholder.com/60x60/2c3e50/ffffff?text=PCCOE';">
+      <div class="pcce-logo-text">
+        <div class="main">APPLIED SCIENCES & HUMANITIES</div>
+        <div class="sub">Pimpri Chinchwad College of Engineering</div>
+      </div>
     </div>
+    <div class="logic-converter-logo">
+      <i class="fas fa-microchip"></i>
+      <h1>Logic <span>Converter</span></h1>
+    </div>
+  </div>
+  <div class="user-info">
+    <i class="fas fa-user-circle"></i>
+    <span>Welcome, Student</span>
+  </div>
+</div>
 </header>
 
+
+
 <div class="container main-content">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <h3>POS to SOP Converter</h3>
-        <ul class="nav-menu">
-            <li class="nav-item active" data-target="aim"><i class="fas fa-bullseye"></i><span>Aim</span></li>
-            <li class="nav-item" data-target="theory"><i class="fas fa-book"></i><span>Theory</span></li>
-            <li class="nav-item" data-target="pretest"><i class="fas fa-question-circle"></i><span>Pretest</span></li>
-            <li class="nav-item" data-target="simulation"><i class="fas fa-desktop"></i><span>Simulation</span></li>
-            <li class="nav-item" data-target="posttest"><i class="fas fa-clipboard-check"></i><span>Posttest</span></li>
-            <li class="nav-item" data-target="references"><i class="fas fa-book-open"></i><span>References</span></li>
-            <li class="nav-item" data-target="contributors"><i class="fas fa-users"></i><span>Contributors</span></li>
-            <li class="nav-item" data-target="feedback"><i class="fas fa-comment-alt"></i><span>Feedback</span></li>
-        </ul>
-    </aside>
+<main class="content">
 
-    <!-- Content -->
-    <main class="content">
-        <div class="content-header">
-            <div class="breadcrumb">Digital Electronics &gt; <span>POS to SOP Converter</span></div>
-            <h2>POS to SOP Logic Converter</h2>
-            <p>Virtual Lab – Applied Sciences and Humanities</p>
-        </div>
 
-        <!-- AIM -->
-        <section id="aim" class="section-page active">
-            <h3>Aim</h3>
-            <p>To design and implement a virtual experiment that converts a 3‑variable Boolean expression in POS form to its equivalent SOP form.</p>
-        </section>
 
-        <!-- THEORY -->
-        <section id="theory" class="section-page">
-            <h3>Theory</h3>
-            <p>POS (Product of Sums) is an AND of OR terms, while SOP (Sum of Products) is an OR of AND terms.[web:5]</p>
-            <p>Conversion uses the relationship between maxterms and minterms for the same truth table.</p>
-        </section>
-
-        <!-- PRETEST -->
-        <section id="pretest" class="section-page">
-            <h3>Pretest</h3>
-
-            <div class="question" data-answer="b">
-                <h4>Q1. In POS form, each bracket represents:</h4>
-                <div class="options">
-                    <label><input type="radio" name="q1" value="a"> A product term (AND of literals)</label>
-                    <label><input type="radio" name="q1" value="b"> A sum term (OR of literals)</label>
-                    <label><input type="radio" name="q1" value="c"> A minterm</label>
-                    <label><input type="radio" name="q1" value="d"> A maxterm pair</label>
-                </div>
-                <button class="check-btn">Check answer</button>
-                <div class="feedback"></div>
-            </div>
-
-            <div class="question" data-answer="c">
-                <h4>Q2. Which of these is a valid POS expression?</h4>
-                <div class="options">
-                    <label><input type="radio" name="q2" value="a"> AB + C</label>
-                    <label><input type="radio" name="q2" value="b"> A + B + C</label>
-                    <label><input type="radio" name="q2" value="c"> (A + B)(A' + C)</label>
-                    <label><input type="radio" name="q2" value="d"> A'B + BC</label>
-                </div>
-                <button class="check-btn">Check answer</button>
-                <div class="feedback"></div>
-            </div>
-        </section>
-
-        <!-- SIMULATION -->
-        <section id="simulation" class="section-page">
-            <h3>Simulation – POS to SOP Converter</h3>
-            <div class="converter-card">
-                <p>Assume 3 variables: A, B, C.</p>
-                <label for="posInput">Enter POS expression (example: (A + B' + C)(A' + B + C'))</label>
-                <input id="posInput" type="text" placeholder="(A + B' + C)(A' + B + C')">
-                <button class="btn-main" id="convertBtn">Convert to SOP</button>
-                <h4 style="margin-top:15px;">SOP Output:</h4>
-                <div id="sopOutput">Result will appear here.</div>
-            </div>
-        </section>
-
-        <!-- POSTTEST -->
-        <section id="posttest" class="section-page">
-            <h3>Posttest</h3>
-
-            <div class="question" data-answer="d">
-                <h4>Q1. POS to SOP conversion essentially finds:</h4>
-                <div class="options">
-                    <label><input type="radio" name="pq1" value="a"> A different truth table</label>
-                    <label><input type="radio" name="pq1" value="b"> Only maxterms</label>
-                    <label><input type="radio" name="pq1" value="c"> Only minterms</label>
-                    <label><input type="radio" name="pq1" value="d"> An equivalent form with the same truth table</label>
-                </div>
-                <button class="check-btn">Check answer</button>
-                <div class="feedback"></div>
-            </div>
-
-            <div class="question" data-answer="a">
-                <h4>Q2. For 3 variables, how many possible minterms exist?</h4>
-                <div class="options">
-                    <label><input type="radio" name="pq2" value="a"> 8</label>
-                    <label><input type="radio" name="pq2" value="b"> 4</label>
-                    <label><input type="radio" name="pq2" value="c"> 6</label>
-                    <label><input type="radio" name="pq2" value="d"> 2</label>
-                </div>
-                <button class="check-btn">Check answer</button>
-                <div class="feedback"></div>
-            </div>
-        </section>
-
-        <!-- REFERENCES -->
-        <section id="references" class="section-page">
-            <h3>References</h3>
-            <ul>
-                <li>Digital Electronics textbooks discussing SOP and POS forms.[web:5]</li>
-                <li>Online tutorials on Boolean algebra and K‑maps.[web:1]</li>
-            </ul>
-        </section>
-
-        <!-- CONTRIBUTORS -->
-        <section id="contributors" class="section-page">
-            <h3>Contributors</h3>
-            <p>Student: Your Name</p>
-            <p>Guide: Faculty, Applied Sciences and Humanities, PCCOE.</p>
-        </section>
-
-        <!-- FEEDBACK -->
-        <section id="feedback" class="section-page">
-            <h3>Feedback</h3>
-            <p>Share your experience with this virtual lab.</p>
-            <textarea id="fbText" rows="4" style="width:100%;padding:8px;border-radius:4px;border:1px solid #ccc;"></textarea>
-            <br><br>
-            <button class="btn-main" id="fbBtn">Submit Feedback</button>
-            <p id="fbMsg" style="margin-top:10px;"></p>
-        </section>
-    </main>
+<!-- Top tabs -->
+<div class="tab-bar">
+  <button class="tab-btn active" data-target="aim">Aim</button>
+  <button class="tab-btn" data-target="theory">Theory</button>
+  <button class="tab-btn" data-target="pretest">Pretest</button>
+  <button class="tab-btn" data-target="simulation">Simulation</button>
+  <button class="tab-btn" data-target="posttest">Posttest</button>
+  <button class="tab-btn" data-target="references">References</button>
+  <button class="tab-btn" data-target="contributors">Contributors</button>
 </div>
 
-<footer class="container">
-    <p>Virtual Labs &copy; 2025 | Applied Sciences &amp; Humanities Department |
-        <span class="footer-logo">Pimpri Chinchwad College of Engineering</span>
-    </p>
+
+
+<section id="aim" class="section-page active">
+<h3>Aim</h3>
+<p>To design and implement a virtual laboratory experiment for converting Boolean expressions between SOP and POS forms using truth tables.</p>
+</section>
+
+
+
+<section id="theory" class="section-page">
+<h3>Theory</h3>
+
+
+
+<p>Boolean algebra is the foundation of digital electronics and is used to analyze and design digital circuits. A Boolean function can be expressed in different standard forms, among which Sum of Products (SOP) and Product of Sums (POS) are the most commonly used canonical representations.</p>
+
+
+
+<p>In SOP (Sum of Products) form, the Boolean function is expressed as an OR combination of multiple AND terms, known as minterms. Each minterm represents a unique combination of input variables for which the output of the function is equal to logic 1. SOP expressions are widely used in logic circuit design because they directly correspond to the activation conditions of a digital system.</p>
+
+
+
+<p>In POS (Product of Sums) form, the Boolean function is expressed as an AND combination of multiple OR terms, known as maxterms. Each maxterm corresponds to a unique input combination for which the output of the function is equal to logic 0. POS form is useful when designing circuits where disabling conditions are more important.</p>
+
+
+
+<p>Conversion between SOP and POS forms is carried out using the truth table method. A truth table lists all possible combinations of input variables, which are equal to 2ⁿ rows for n variables. By evaluating the Boolean function for each input combination, the output values are determined.</p>
+
+
+
+<p>Rows with output value 1 are used to form the SOP expression using minterms, while rows with output value 0 are used to form the POS expression using maxterms. This method ensures that both SOP and POS forms represent the same logical function, even though their expressions appear different.</p>
+
+
+
+<p>This virtual laboratory simulator allows users to enter Boolean expressions with 2, 3, or 4 variables, automatically generates the corresponding truth table, and performs accurate conversion between SOP and POS forms, helping students understand the concept clearly through interactive learning.</p>
+</section>
+
+
+
+<section id="pretest" class="section-page">
+<h3>🔍 Pretest (5 Questions)</h3>
+
+
+
+<div class="question" data-answer="b">
+<h4>Q1. SOP form represents the function using:</h4>
+<div class="options">
+<label><input type="radio" name="q1" value="a"> Sum of maxterms</label>
+<label><input type="radio" name="q1" value="b"> Sum of minterms</label>
+<label><input type="radio" name="q1" value="c"> Product of minterms</label>
+<label><input type="radio" name="q1" value="d"> Product of maxterms</label>
+</div>
+<button class="check-btn">Check Answer</button>
+<div class="feedback"></div>
+</div>
+
+
+
+<div class="question" data-answer="a">
+<h4>Q2. For 3 variables (A,B,C), how many minterms exist?</h4>
+<div class="options">
+<label><input type="radio" name="q2" value="a"> 8</label>
+<label><input type="radio" name="q2" value="b"> 4</label>
+<label><input type="radio" name="q2" value="c"> 16</label>
+<label><input type="radio" name="q2" value="d"> 6</label>
+</div>
+<button class="check-btn">Check Answer</button>
+<div class="feedback"></div>
+</div>
+
+
+
+<div class="question" data-answer="d">
+<h4>Q3. Which is a valid POS expression?</h4>
+<div class="options">
+<label><input type="radio" name="q3" value="a"> A'B + BC</label>
+<label><input type="radio" name="q3" value="b"> AB + C</label>
+<label><input type="radio" name="q3" value="c"> A + B'C</label>
+<label><input type="radio" name="q3" value="d"> (A+B)(A'+C)</label>
+</div>
+<button class="check-btn">Check Answer</button>
+<div class="feedback"></div>
+</div>
+
+
+
+<div class="question" data-answer="c">
+<h4>Q4. Minterm m2 for variables A,B,C is:</h4>
+<div class="options">
+<label><input type="radio" name="q4" value="a"> A'B'C'</label>
+<label><input type="radio" name="q4" value="b"> A'B'C</label>
+<label><input type="radio" name="q4" value="c"> A'BC'</label>
+<label><input type="radio" name="q4" value="d"> ABC</label>
+</div>
+<button class="check-btn">Check Answer</button>
+<div class="feedback"></div>
+</div>
+
+
+
+<div class="question" data-answer="b">
+<h4>Q5. POS form lists the rows where function output is:</h4>
+<div class="options">
+<label><input type="radio" name="q5" value="a"> 1</label>
+<label><input type="radio" name="q5" value="b"> 0</label>
+<label><input type="radio" name="q5" value="c"> Don't care</label>
+<label><input type="radio" name="q5" value="d"> Always 1</label>
+</div>
+<button class="check-btn">Check Answer</button>
+<div class="feedback"></div>
+</div>
+</section>
+
+
+
+<section id="simulation" class="section-page">
+<h3>Simulation</h3>
+
+
+
+<div class="converter-card">
+<label>Mode</label>
+<select id="mode">
+<option value="SOPtoPOS">SOP → POS</option>
+<option value="POStoSOP">POS → SOP</option>
+</select>
+
+
+
+<label>Enter Expression</label>
+<input id="exprInput" placeholder="Example: A'B + AB' or (A + B)(A' + B')">
+
+
+
+<button class="btn-main" onclick="convert()">Convert</button>
+
+
+
+<h4>Converted Expression</h4>
+<div id="output"></div>
+
+
+
+<h4>Truth Table</h4>
+<div id="table"></div>
+</div>
+</section>
+
+
+
+<section id="posttest" class="section-page">
+<h3>🎯 Posttest (5 Questions)</h3>
+
+
+
+<div class="question" data-answer="b">
+<h4>Q1. Σm(1,3,5) for 3 variables converts to:</h4>
+<div class="options">
+<label><input type="radio" name="p1" value="a"> ΠM(0,2,4,6,7)</label>
+<label><input type="radio" name="p1" value="b"> ΠM(0,2,4)</label>
+<label><input type="radio" name="p1" value="c"> ΠM(1,3,5)</label>
+<label><input type="radio" name="p1" value="d"> Σm(0,2,4)</label>
+</div>
+<button class="check-btn">Check Answer</button>
+<div class="feedback"></div>
+</div>
+
+
+
+<div class="question" data-answer="a">
+<h4>Q2. For 2 variables, total possible maxterms:</h4>
+<div class="options">
+<label><input type="radio" name="p2" value="a"> 4</label>
+<label><input type="radio" name="p2" value="b"> 8</label>
+<label><input type="radio" name="p2" value="c"> 2</label>
+<label><input type="radio" name="p2" value="d"> 16</label>
+</div>
+<button class="check-btn">Check Answer</button>
+<div class="feedback"></div>
+</div>
+
+
+
+<div class="question" data-answer="d">
+<h4>Q3. Maxterm M0 for ABC is:</h4>
+<div class="options">
+<label><input type="radio" name="p3" value="a"> (A'+B'+C')</label>
+<label><input type="radio" name="p3" value="b"> (A+B+C')</label>
+<label><input type="radio" name="p3" value="c"> (A'+B+C)</label>
+<label><input type="radio" name="p3" value="d"> (A+B+C)</label>
+</div>
+<button class="check-btn">Check Answer</button>
+<div class="feedback"></div>
+</div>
+
+
+
+<div class="question" data-answer="c">
+<h4>Q4. Canonical SOP form contains:</h4>
+<div class="options">
+<label><input type="radio" name="p4" value="a"> Only complemented variables</label>
+<label><input type="radio" name="p4" value="b"> Only non-complemented variables</label>
+<label><input type="radio" name="p4" value="c"> All variables in each term</label>
+<label><input type="radio" name="p4" value="d"> No variables</label>
+</div>
+<button class="check-btn">Check Answer</button>
+<div class="feedback"></div>
+</div>
+
+
+
+<div class="question" data-answer="a">
+<h4>Q5. The primary advantage of SOP/POS conversion is:</h4>
+<div class="options">
+<label><input type="radio" name="p5" value="a"> Same truth table, different implementation</label>
+<label><input type="radio" name="p5" value="b"> Faster circuit operation</label>
+<label><input type="radio" name="p5" value="c"> Fewer gates required</label>
+<label><input type="radio" name="p5" value="d"> Smaller chip area</label>
+</div>
+<button class="check-btn">Check Answer</button>
+<div class="feedback"></div>
+</div>
+</section>
+
+
+
+<section id="references" class="section-page">
+<h3>References</h3>
+<ul>
+  <li>
+    M. Morris Mano, “Digital Design”.
+    <a href="https://www.pearson.com" target="_blank">Publisher link</a>
+  </li>
+  <li>
+    NPTEL – Digital Logic Design.
+    <a href="https://nptel.ac.in/courses/108/106/108106273/" target="_blank">Course page</a>
+  </li>
+  <li>
+    R. P. Jain, “Modern Digital Electronics”.
+    <a href="https://www.mheducation.co.in" target="_blank">Publisher link</a>
+  </li>
+  <li>
+    Brown & Vranesic, “Fundamentals of Digital Logic with Verilog Design”.
+    <a href="https://highered.mheducation.com" target="_blank">Publisher link</a>
+  </li>
+  <li>
+    TutorialsPoint – Digital Logic Design.
+    <a href="https://www.tutorialspoint.com/digital_electronics/index.htm" target="_blank">Online notes</a>
+  </li>
+</ul>
+</section>
+
+
+
+<section id="contributors" class="section-page">
+<h3>Contributors</h3>
+
+
+<h4>Developers</h4>
+<div class="contributors-grid">
+  <div class="contrib-card">
+    <img src="Rishabh.jpg" alt="Rishabh Prabhu">
+    <h4>Rishabh Prabhu</h4>
+    <p>PRN- 125B1F263</p>
+  </div>
+  <div class="contrib-card">
+    <img src="Ameya.jpeg" alt="Ameya Chaudhari">
+    <h4>Ameya Chaudhari</h4>
+    <p>PRN- 125B1F255</p>
+  </div>
+  <div class="contrib-card">
+    <img src="Parth.jpeg" alt="Parth Nikam">
+    <h4>Parth Nikam</h4>
+    <p>PRN- 125B1F270</p>
+  </div>
+  <div class="contrib-card">
+    <img src="Saish.jpeg" alt="Saish Rajput">
+    <h4>Saish Rajput</h4>
+    <p>PRN- 125B1F254</p>
+  </div>
+</div>
+
+
+<br><br>
+
+
+<h4>Professors</h4>
+<div class="contributors-grid">
+  <div class="contrib-card">
+    <img src="dinesh-kute.jpeg" alt="Dinesh Kute">
+    <h4>Dinesh Kute</h4>
+  </div>
+  <div class="contrib-card">
+    <img src="Rohit sir.png" alt="Rohit Tate">
+    <h4>Rohit Tate</h4>
+  </div>
+</div>
+</section>
+
+
+
+</main>
+</div>
+
+
+
+<footer>
+<p>Virtual Labs © 2025</p>
 </footer>
 
+
+
 <script>
-    // Sidebar navigation
-    const navItems = document.querySelectorAll('.nav-item');
-    const pages = document.querySelectorAll('.section-page');
+/* Tabs */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.section-page').forEach(s=>s.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.target).classList.add('active');
+  };
+});
 
-    navItems.forEach(item=>{
-        item.addEventListener('click',()=>{
-            navItems.forEach(i=>i.classList.remove('active'));
-            item.classList.add('active');
-            const target = item.getAttribute('data-target');
-            pages.forEach(p=>{
-                p.classList.toggle('active',p.id===target);
-            });
-        });
-    });
 
-    // MCQ checking (Pretest + Posttest)
-    document.querySelectorAll('.question').forEach(q=>{
-        const btn = q.querySelector('.check-btn');
-        const correct = q.dataset.answer;
-        const fb = q.querySelector('.feedback');
-        btn.addEventListener('click',()=>{
-            const name = q.querySelector('input[type="radio"]').name;
-            const checked = q.querySelector('input[name="'+name+'"]:checked');
-            if(!checked){
-                fb.textContent = 'Please select an option.';
-                fb.className='feedback';
-                return;
-            }
-            if(checked.value===correct){
-                fb.textContent='Correct!';
-                fb.className='feedback correct';
-            }else{
-                fb.textContent='Wrong answer. Try again.';
-                fb.className='feedback wrong';
-            }
-        });
-    });
 
-    // Simple placeholder converter: just echoes input with a note
-    document.getElementById('convertBtn').addEventListener('click',()=>{
-        const pos = document.getElementById('posInput').value.trim();
-        const out = document.getElementById('sopOutput');
-        if(!pos){
-            out.textContent='Please enter a POS expression first.';
-            return;
-        }
-        // TODO: replace this with real 3‑variable POS→SOP logic using minterms/maxterms
-        out.textContent='(Demo) SOP equivalent for: '+pos+'  [You can now implement exact logic using minterms and K‑map].';
-    });
+/* MCQ check */
+document.querySelectorAll('.question').forEach(q=>{
+  q.querySelector('.check-btn').onclick=()=>{
+    let ans=q.dataset.answer;
+    let sel=q.querySelector('input:checked');
+    let fb=q.querySelector('.feedback');
+    if(!sel){
+      fb.textContent="⚠️ Please select an option first";
+      fb.className="feedback";
+      return;
+    }
+    fb.textContent=sel.value===ans?"✅ Correct! Well done!":"❌ Incorrect. Try again.";
+    fb.className="feedback "+(sel.value===ans?"correct":"wrong");
+  };
+});
 
-    // Feedback
-    document.getElementById('fbBtn').addEventListener('click',()=>{
-        const txt=document.getElementById('fbText').value.trim();
-        const msg=document.getElementById('fbMsg');
-        if(!txt){msg.textContent='Please write some feedback.';return;}
-        msg.textContent='Thank you for your feedback!';
-    });
+
+
+/* Logic */
+function variables(expr){return [...new Set(expr.match(/[A-D]/gi))].sort();}
+function evalExpr(expr,row){
+  let e=expr;
+  for(let v in row){
+    e=e.replaceAll(v+"'",row[v]?0:1);
+    e=e.replaceAll(v,row[v]);
+  }
+  return Function("return "+e.replaceAll('+','||'))();
+}
+function truthTable(expr,vars){
+  let t=[];
+  for(let i=0;i<2**vars.length;i++){
+    let r={};
+    vars.forEach((v,j)=>r[v]=(i>>(vars.length-j-1))&1);
+    r.val=evalExpr(expr,r)?1:0;
+    t.push(r);
+  }
+  return t;
+}
+function toSOP(t,vars){
+  return t.filter(r=>r.val).map(r=>vars.map(v=>r[v]?v:v+"'").join('')).join(' + ')||'0';
+}
+function toPOS(t,vars){
+  return t.filter(r=>!r.val).map(r=>'('+vars.map(v=>r[v]?v+"'":v).join(' + ')+')').join('')||'1';
+}
+function showTable(t,vars){
+  let h='<table><tr>';
+  vars.forEach(v=>h+='<th>'+v+'</th>');
+  h+='<th>F</th></tr>';
+  t.forEach(r=>{
+    h+='<tr>';
+    vars.forEach(v=>h+='<td>'+r[v]+'</td>');
+    h+='<td>'+r.val+'</td></tr>';
+  });
+  return h+'</table>';
+}
+function convert(){
+  let expr=document.getElementById('exprInput').value.trim();
+  if(!expr)return alert("Enter expression");
+  let vars=variables(expr);
+  let t=truthTable(expr,vars);
+  document.getElementById('output').innerText=
+    document.getElementById('mode').value==='SOPtoPOS'?toPOS(t,vars):toSOP(t,vars);
+  document.getElementById('table').innerHTML=showTable(t,vars);
+}
 </script>
+
+
+
 </body>
 </html>
