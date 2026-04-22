@@ -208,103 +208,119 @@ footer{text-align:center;margin-top:40px;padding:20px;color:#777}
 
 
 
-<p>Boolean algebra is the foundation of digital electronics and is used to analyze and design digital circuits. A Boolean function can be expressed in different standard forms, among which Sum of Products (SOP) and Product of Sums (POS) are the most commonly used canonical representations.</p>
+<p>Boolean algebra is the foundation of digital electronics and is used to analyze and design digital circuits.</p>
 
 
 
-<p>In SOP (Sum of Products) form, the Boolean function is expressed as an OR combination of multiple AND terms, known as minterms. Each minterm represents a unique combination of input variables for which the output of the function is equal to logic 1. SOP expressions are widely used in logic circuit design because they directly correspond to the activation conditions of a digital system.</p>
+<p>In SOP (Sum of Products) form, the Boolean function is expressed as an OR combination of multiple AND terms, known as minterms.</p>
 
 
 
-<p>In POS (Product of Sums) form, the Boolean function is expressed as an AND combination of multiple OR terms, known as maxterms. Each maxterm corresponds to a unique input combination for which the output of the function is equal to logic 0. POS form is useful when designing circuits where disabling conditions are more important.</p>
+<p>In POS (Product of Sums) form, the Boolean function is expressed as an AND combination of multiple OR terms, known as maxterms.</p>
 
 
 
-<p>Conversion between SOP and POS forms is carried out using the truth table method. A truth table lists all possible combinations of input variables, which are equal to 2ⁿ rows for n variables. By evaluating the Boolean function for each input combination, the output values are determined.</p>
+<p>Conversion between SOP and POS forms is carried out using the truth table method.</p>
 
 
 
-<p>Rows with output value 1 are used to form the SOP expression using minterms, while rows with output value 0 are used to form the POS expression using maxterms. This method ensures that both SOP and POS forms represent the same logical function, even though their expressions appear different.</p>
+<p>Rows with output value 1 are used to form the SOP expression using minterms, while rows with output value 0 are used to form the POS expression using maxterms.</p>
 
 
 
-<p>This virtual laboratory simulator allows users to enter Boolean expressions with 2, 3, or 4 variables, automatically generates the corresponding truth table, and performs accurate conversion between SOP and POS forms, helping students understand the concept clearly through interactive learning.</p>
+<p>This virtual laboratory simulator allows users to enter Boolean expressions with 2, 3, or 4 variables, automatically generates the corresponding truth table, and performs conversion between SOP and POS forms.</p>
 </section>
 
 
 
 <section id="pretest" class="section-page">
-<h3>🔍 Pretest (5 Questions)</h3>
-
-
+<h3>🔍 Pretest (Concepts Before Using Simulator)</h3>
 
 <div class="question" data-answer="b">
-<h4>Q1. SOP form represents the function using:</h4>
+<h4>Q1. In Boolean algebra, SOP stands for:</h4>
 <div class="options">
-<label><input type="radio" name="q1" value="a"> Sum of maxterms</label>
-<label><input type="radio" name="q1" value="b"> Sum of minterms</label>
-<label><input type="radio" name="q1" value="c"> Product of minterms</label>
-<label><input type="radio" name="q1" value="d"> Product of maxterms</label>
+<label><input type="radio" name="q1" value="a"> Sum of Powers</label>
+<label><input type="radio" name="q1" value="b"> Sum of Products</label>
+<label><input type="radio" name="q1" value="c"> Series of Products</label>
+<label><input type="radio" name="q1" value="d"> Set of Products</label>
 </div>
-<button class="check-btn">Check Answer</button>
+<button class="check-btn">Lock Answer</button>
 <div class="feedback"></div>
 </div>
-
-
-
-<div class="question" data-answer="a">
-<h4>Q2. For 3 variables (A,B,C), how many minterms exist?</h4>
-<div class="options">
-<label><input type="radio" name="q2" value="a"> 8</label>
-<label><input type="radio" name="q2" value="b"> 4</label>
-<label><input type="radio" name="q2" value="c"> 16</label>
-<label><input type="radio" name="q2" value="d"> 6</label>
-</div>
-<button class="check-btn">Check Answer</button>
-<div class="feedback"></div>
-</div>
-
-
-
-<div class="question" data-answer="d">
-<h4>Q3. Which is a valid POS expression?</h4>
-<div class="options">
-<label><input type="radio" name="q3" value="a"> A'B + BC</label>
-<label><input type="radio" name="q3" value="b"> AB + C</label>
-<label><input type="radio" name="q3" value="c"> A + B'C</label>
-<label><input type="radio" name="q3" value="d"> (A+B)(A'+C)</label>
-</div>
-<button class="check-btn">Check Answer</button>
-<div class="feedback"></div>
-</div>
-
-
 
 <div class="question" data-answer="c">
-<h4>Q4. Minterm m2 for variables A,B,C is:</h4>
+<h4>Q2. POS form expresses a Boolean function as:</h4>
 <div class="options">
-<label><input type="radio" name="q4" value="a"> A'B'C'</label>
-<label><input type="radio" name="q4" value="b"> A'B'C</label>
-<label><input type="radio" name="q4" value="c"> A'BC'</label>
-<label><input type="radio" name="q4" value="d"> ABC</label>
+<label><input type="radio" name="q2" value="a"> Sum of minterms</label>
+<label><input type="radio" name="q2" value="b"> Sum of maxterms</label>
+<label><input type="radio" name="q2" value="c"> Product of sums</label>
+<label><input type="radio" name="q2" value="d"> Product of products</label>
 </div>
-<button class="check-btn">Check Answer</button>
+<button class="check-btn">Lock Answer</button>
 <div class="feedback"></div>
 </div>
 
-
+<div class="question" data-answer="a">
+<h4>Q3. A minterm corresponds to a row in the truth table where the function output is:</h4>
+<div class="options">
+<label><input type="radio" name="q3" value="a"> 1</label>
+<label><input type="radio" name="q3" value="b"> 0</label>
+<label><input type="radio" name="q3" value="c"> Either 0 or 1</label>
+<label><input type="radio" name="q3" value="d"> Don't care only</label>
+</div>
+<button class="check-btn">Lock Answer</button>
+<div class="feedback"></div>
+</div>
 
 <div class="question" data-answer="b">
-<h4>Q5. POS form lists the rows where function output is:</h4>
+<h4>Q4. A maxterm corresponds to a row in the truth table where the function output is:</h4>
 <div class="options">
-<label><input type="radio" name="q5" value="a"> 1</label>
-<label><input type="radio" name="q5" value="b"> 0</label>
-<label><input type="radio" name="q5" value="c"> Don't care</label>
-<label><input type="radio" name="q5" value="d"> Always 1</label>
+<label><input type="radio" name="q4" value="a"> 1 only</label>
+<label><input type="radio" name="q4" value="b"> 0</label>
+<label><input type="radio" name="q4" value="c"> 1 or don't care</label>
+<label><input type="radio" name="q4" value="d"> Not defined</label>
 </div>
-<button class="check-btn">Check Answer</button>
+<button class="check-btn">Lock Answer</button>
 <div class="feedback"></div>
 </div>
+
+<div class="question" data-answer="d">
+<h4>Q5. For n Boolean variables, a complete truth table contains:</h4>
+<div class="options">
+<label><input type="radio" name="q5" value="a"> 2n rows</label>
+<label><input type="radio" name="q5" value="b"> n rows</label>
+<label><input type="radio" name="q5" value="c"> n² rows</label>
+<label><input type="radio" name="q5" value="d"> 2ⁿ rows</label>
+</div>
+<button class="check-btn">Lock Answer</button>
+<div class="feedback"></div>
+</div>
+
+<div class="question" data-answer="a">
+<h4>Q6. In canonical SOP form, each product term contains:</h4>
+<div class="options">
+<label><input type="radio" name="q6" value="a"> All variables, either complemented or not</label>
+<label><input type="radio" name="q6" value="b"> Only complemented variables</label>
+<label><input type="radio" name="q6" value="c"> Only non-complemented variables</label>
+<label><input type="radio" name="q6" value="d"> At most one variable</label>
+</div>
+<button class="check-btn">Lock Answer</button>
+<div class="feedback"></div>
+</div>
+
+<div class="question" data-answer="c">
+<h4>Q7. The main purpose of using the simulator in this experiment is to:</h4>
+<div class="options">
+<label><input type="radio" name="q7" value="a"> Design analog circuits</label>
+<label><input type="radio" name="q7" value="b"> Measure power consumption</label>
+<label><input type="radio" name="q7" value="c"> Convert Boolean expressions between SOP and POS using truth tables</label>
+<label><input type="radio" name="q7" value="d"> Test microprocessor programs</label>
+</div>
+<button class="check-btn">Lock Answer</button>
+<div class="feedback"></div>
+</div>
+
+<div id="pretest-score" class="feedback" style="display:none;"></div>
 </section>
 
 
@@ -345,7 +361,7 @@ footer{text-align:center;margin-top:40px;padding:20px;color:#777}
 
 
 <section id="posttest" class="section-page">
-<h3>🎯 Posttest (5 Questions)</h3>
+<h3>🎯 Posttest (7 Questions)</h3>
 
 
 
@@ -353,11 +369,11 @@ footer{text-align:center;margin-top:40px;padding:20px;color:#777}
 <h4>Q1. Σm(1,3,5) for 3 variables converts to:</h4>
 <div class="options">
 <label><input type="radio" name="p1" value="a"> ΠM(0,2,4,6,7)</label>
-<label><input type="radio" name="p1" value="b"> ΠM(0,2,4)</label>
+<label><input type="radio" name="p1" value="b"> ΠM(0,2,4,6,7)</label>
 <label><input type="radio" name="p1" value="c"> ΠM(1,3,5)</label>
 <label><input type="radio" name="p1" value="d"> Σm(0,2,4)</label>
 </div>
-<button class="check-btn">Check Answer</button>
+<button class="check-btn">Lock Answer</button>
 <div class="feedback"></div>
 </div>
 
@@ -367,11 +383,11 @@ footer{text-align:center;margin-top:40px;padding:20px;color:#777}
 <h4>Q2. For 2 variables, total possible maxterms:</h4>
 <div class="options">
 <label><input type="radio" name="p2" value="a"> 4</label>
-<label><input type="radio" name="p2" value="b"> 8</label>
-<label><input type="radio" name="p2" value="c"> 2</label>
+<label><input type="radio" name="p2" value="b"> 2</label>
+<label><input type="radio" name="p2" value="c"> 8</label>
 <label><input type="radio" name="p2" value="d"> 16</label>
 </div>
-<button class="check-btn">Check Answer</button>
+<button class="check-btn">Lock Answer</button>
 <div class="feedback"></div>
 </div>
 
@@ -385,7 +401,7 @@ footer{text-align:center;margin-top:40px;padding:20px;color:#777}
 <label><input type="radio" name="p3" value="c"> (A'+B+C)</label>
 <label><input type="radio" name="p3" value="d"> (A+B+C)</label>
 </div>
-<button class="check-btn">Check Answer</button>
+<button class="check-btn">Lock Answer</button>
 <div class="feedback"></div>
 </div>
 
@@ -399,7 +415,7 @@ footer{text-align:center;margin-top:40px;padding:20px;color:#777}
 <label><input type="radio" name="p4" value="c"> All variables in each term</label>
 <label><input type="radio" name="p4" value="d"> No variables</label>
 </div>
-<button class="check-btn">Check Answer</button>
+<button class="check-btn">Lock Answer</button>
 <div class="feedback"></div>
 </div>
 
@@ -413,9 +429,35 @@ footer{text-align:center;margin-top:40px;padding:20px;color:#777}
 <label><input type="radio" name="p5" value="c"> Fewer gates required</label>
 <label><input type="radio" name="p5" value="d"> Smaller chip area</label>
 </div>
-<button class="check-btn">Check Answer</button>
+<button class="check-btn">Lock Answer</button>
 <div class="feedback"></div>
 </div>
+
+<div class="question" data-answer="b">
+<h4>Q6. In POS form, which rows of the truth table are used to form the expression?</h4>
+<div class="options">
+<label><input type="radio" name="p6" value="a"> Rows where output is 1</label>
+<label><input type="radio" name="p6" value="b"> Rows where output is 0</label>
+<label><input type="radio" name="p6" value="c"> Only don't care rows</label>
+<label><input type="radio" name="p6" value="d"> All rows</label>
+</div>
+<button class="check-btn">Lock Answer</button>
+<div class="feedback"></div>
+</div>
+
+<div class="question" data-answer="c">
+<h4>Q7. For 3 variables (A,B,C), the total number of distinct minterms is:</h4>
+<div class="options">
+<label><input type="radio" name="p7" value="a"> 4</label>
+<label><input type="radio" name="p7" value="b"> 6</label>
+<label><input type="radio" name="p7" value="c"> 8</label>
+<label><input type="radio" name="p7" value="d"> 3</label>
+</div>
+<button class="check-btn">Lock Answer</button>
+<div class="feedback"></div>
+</div>
+
+<div id="posttest-score" class="feedback" style="display:none;"></div>
 </section>
 
 
@@ -519,21 +561,63 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
 
 
 
-/* MCQ check */
-document.querySelectorAll('.question').forEach(q=>{
-  q.querySelector('.check-btn').onclick=()=>{
-    let ans=q.dataset.answer;
-    let sel=q.querySelector('input:checked');
-    let fb=q.querySelector('.feedback');
-    if(!sel){
-      fb.textContent="⚠️ Please select an option first";
+/* MCQ check: lock answers, show correctness only after all attempted */
+function setupQuiz(sectionId, scoreId){
+  const section=document.getElementById(sectionId);
+  const questions=section.querySelectorAll('.question');
+  const total=questions.length;
+
+  questions.forEach(q=>{
+    const btn=q.querySelector('.check-btn');
+    btn.onclick=()=>{
+      const sel=q.querySelector('input:checked');
+      const fb=q.querySelector('.feedback');
+      if(!sel){
+        fb.textContent="⚠️ Please select an option first";
+        fb.className="feedback";
+        return;
+      }
+      if(fb.dataset.locked==="1"){
+        return;
+      }
+      fb.dataset.locked="1";
+      fb.textContent="Answer locked. Result will be shown after all questions are attempted.";
       fb.className="feedback";
-      return;
-    }
-    fb.textContent=sel.value===ans?"✅ Correct! Well done!":"❌ Incorrect. Try again.";
-    fb.className="feedback "+(sel.value===ans?"correct":"wrong");
-  };
-});
+
+      const scoreBox=document.getElementById(scoreId);
+      let attempted=0;
+      questions.forEach(qq=>{
+        const fbb=qq.querySelector('.feedback');
+        if(fbb.dataset.locked==="1"){
+          attempted++;
+        }
+      });
+
+      if(attempted===total){
+        let correct=0;
+        questions.forEach(qq=>{
+          const ans=qq.dataset.answer;
+          const selected=qq.querySelector('input:checked');
+          const fbb=qq.querySelector('.feedback');
+          if(selected && selected.value===ans){
+            correct++;
+            fbb.textContent="✅ Correct!";
+            fbb.className="feedback correct";
+          }else{
+            fbb.textContent="❌ Incorrect.";
+            fbb.className="feedback wrong";
+          }
+        });
+        scoreBox.style.display="block";
+        scoreBox.className="feedback";
+        scoreBox.textContent="Your score: "+correct+" / "+total;
+      }
+    };
+  });
+}
+
+setupQuiz('pretest','pretest-score');
+setupQuiz('posttest','posttest-score');
 
 
 
