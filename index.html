@@ -7,12 +7,10 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 
-
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Verdana,sans-serif}
 body{background:#f8f9fa;color:#333}
 .container{max-width:1200px;margin:auto;padding:0 20px}
-
 
 
 /* Header */
@@ -32,7 +30,6 @@ header{background:linear-gradient(135deg,#2c3e50,#1a2530);color:#fff;padding:15p
 .user-info i{font-size:20px;color:#3498db}
 
 
-
 /* Layout */
 .main-content{margin-top:30px}
 .content{
@@ -41,7 +38,6 @@ header{background:linear-gradient(135deg,#2c3e50,#1a2530);color:#fff;padding:15p
     box-shadow:0 4px 8px rgba(0,0,0,0.05);
     padding:30px;
 }
-
 
 
 /* Top tabs */
@@ -67,7 +63,6 @@ header{background:linear-gradient(135deg,#2c3e50,#1a2530);color:#fff;padding:15p
 }
 
 
-
 .section-page{display:none}
 .section-page.active{display:block}
 #theory p{margin-bottom:25px;line-height:1.7}
@@ -76,7 +71,6 @@ header{background:linear-gradient(135deg,#2c3e50,#1a2530);color:#fff;padding:15p
 .section-page h3{
     margin-bottom:10px;
 }
-
 
 
 /* Cards */
@@ -93,18 +87,15 @@ header{background:linear-gradient(135deg,#2c3e50,#1a2530);color:#fff;padding:15p
 .feedback.wrong{color:#c0392b;background:#fadbd8;border:1px solid #c0392b}
 
 
-
 /* Converter */
 .converter-card{background:#f8f9fa;padding:20px;border-radius:8px}
 input,select{width:100%;padding:8px;margin-bottom:10px}
 button.btn-main{background:#3498db;color:#fff;border:none;padding:10px;border-radius:6px;cursor:pointer}
 
 
-
 /* Table */
 table{width:100%;border-collapse:collapse;margin-top:10px}
 th,td{border:1px solid #ccc;padding:5px;text-align:center}
-
 
 
 /* Contributors */
@@ -139,16 +130,13 @@ th,td{border:1px solid #ccc;padding:5px;text-align:center}
 }
 
 
-
 /* Footer */
 footer{text-align:center;margin-top:40px;padding:20px;color:#777}
 </style>
 </head>
 
 
-
 <body>
-
 
 
 <header>
@@ -177,10 +165,8 @@ footer{text-align:center;margin-top:40px;padding:20px;color:#777}
 </header>
 
 
-
 <div class="container main-content">
 <main class="content">
-
 
 
 <!-- Top tabs -->
@@ -195,42 +181,122 @@ footer{text-align:center;margin-top:40px;padding:20px;color:#777}
 </div>
 
 
-
 <section id="aim" class="section-page active">
-<h3>Aim</h3>
-<p>To design and implement a virtual laboratory experiment for converting Boolean expressions between SOP and POS forms using truth tables.</p>
+                <h2>Aim</h2>
+                <p>To design and implement a virtual laboratory experiment for converting Boolean expressions between Sum of Products
+                    (SOP) and Product of Sum (POS) forms using truth tables.</p>
 </section>
-
 
 
 <section id="theory" class="section-page">
-<h3>Theory</h3>
+                <h2>Theory</h2>
+
+                <p>
+                <h3>Basic Notation in Boolean Algebra</h3>
+
+                Before understanding SOP and POS, it’s important to know the basic symbols used:<br><br>
+
+                AND operation (·) → written as multiplication<br>
+                Example: A.B or AB means A AND B<br><br>
+                OR operation (+) → written as addition<br>
+                Example: A + B means A OR B<br><br>
+                NOT operation (') → used for complement<br>
+                Example: A' means NOT A<br><br>
+
+                These symbols are used to represent logical operations in a simple mathematical form.
+                </p>
 
 
 
-<p>Boolean algebra is the foundation of digital electronics and is used to analyze and design digital circuits.</p>
+                <p>
+                <h3>Sum of Products (SOP):</h3>
+                In SOP form, the function is written as a Sum of Product terms called minterms. Each minterm represents
+                a specific input combination where the output is 1. This form is useful when focusing on conditions that
+                make the system active.</p>
+
+                <p>
+                <h4>Real-world application (SOP):</h4>
+
+                SOP is used in systems where output depends on specific conditions being true. <br><br>For example:<br>
+
+                1. Digital circuits in CPUs where certain instruction conditions trigger execution<br>
+                2. Alarm systems that activate when any one of multiple conditions is met<br>
+                3. Control logic in automation systems</p>
 
 
 
-<p>In SOP (Sum of Products) form, the Boolean function is expressed as an OR combination of multiple AND terms, known as minterms.</p>
+                <p>
+                <h3>Product of Sums (POS):</h3>
+                In POS form, the function is written as a Product of Sum terms called maxterms. Each maxterm represents
+                input combinations where the output is 0. This is useful when focusing on conditions that disable a
+                system.</p>
+
+                <p>
+                <h4>Real-world application (POS):</h4>
+                POS is used in systems where preventing certain conditions is important. <br><br>For example:<br>
+
+                1. Safety systems that shut down when any unsafe condition occurs<br>
+                2. Error detection circuits<br>
+                3. Access control systems that deny entry under specific conditions</p>
 
 
 
-<p>In POS (Product of Sums) form, the Boolean function is expressed as an AND combination of multiple OR terms, known as maxterms.</p>
+                <p>
+                <h3>Tabular Method for Conversion</h3>
+
+                To convert a Boolean expression between SOP and POS, we use a truth table.<br>Which is simply a table
+                showing all possible combinations of input values.
+                <br>If there are n variables, the truth table will have 2ⁿ rows. Each row represents one unique
+                combination of inputs (0s and 1s). For every combination, we calculate the output of the Boolean
+                expression.
+
+                You can think of a truth table like testing every possible scenario to see when the system gives output
+                1 or 0.</p>
 
 
 
-<p>Conversion between SOP and POS forms is carried out using the truth table method.</p>
+                <p>
+                <h3>How SOP and POS are Formed</h3>
+
+                After creating the truth table, we separate the rows based on the output:
+
+                All rows where the output is 1 are used to form the SOP (Sum of Products) expression<br>
+                All rows where the output is 0 are used to form the POS (Product of Sums) expression</p>
+
+                <p>
+                <h4>In SOP:</h4>
+
+                Each row with output 1 becomes a minterm (AND combination of variables).<br>
+                All these minterms are then added (ORed) together</p>
+
+                <p>
+                <h4>In POS:</h4>
+
+                Each row with output 0 becomes a maxterm (OR combination of variables)<br>
+                All these maxterms are then multiplied (ANDed) together</p>
+
+                <p>
+                <h4>A simple way to understand it:</h4>
+
+                SOP collects all the cases where the system works (i.e all the instances where the system is ON)<br>
+                POS collects all the cases where the system fails (i.e all the instances where the system is OFF)</p>
 
 
 
-<p>Rows with output value 1 are used to form the SOP expression using minterms, while rows with output value 0 are used to form the POS expression using maxterms.</p>
+                <p>
+                <h3>Role of the Virtual Lab</h3>
 
+                This virtual lab makes the whole process easier to understand by doing the heavy lifting for you.<br>
 
+                It allows users to:<br>
 
-<p>This virtual laboratory simulator allows users to enter Boolean expressions with 2, 3, or 4 variables, automatically generates the corresponding truth table, and performs conversion between SOP and POS forms.</p>
-</section>
+                Enter Boolean expressions with 2, 3, or 4 variables<br>
+                Automatically generate the truth table<br>
+                Convert expressions between SOP and POS instantly<br><br>
 
+                By showing both the table and the converted result, it helps students clearly see how the logic works
+                instead of just memorizing formulas</p>
+            </section>
 
 
 <section id="pretest" class="section-page">
@@ -324,10 +390,8 @@ footer{text-align:center;margin-top:40px;padding:20px;color:#777}
 </section>
 
 
-
 <section id="simulation" class="section-page">
 <h3>Simulation</h3>
-
 
 
 <div class="converter-card">
@@ -338,19 +402,15 @@ footer{text-align:center;margin-top:40px;padding:20px;color:#777}
 </select>
 
 
-
 <label>Enter Expression</label>
 <input id="exprInput" placeholder="Example: A'B + AB' or (A + B)(A' + B')">
-
 
 
 <button class="btn-main" onclick="convert()">Convert</button>
 
 
-
 <h4>Converted Expression</h4>
 <div id="output"></div>
-
 
 
 <h4>Truth Table</h4>
@@ -359,10 +419,8 @@ footer{text-align:center;margin-top:40px;padding:20px;color:#777}
 </section>
 
 
-
 <section id="posttest" class="section-page">
 <h3>🎯 Posttest (7 Questions)</h3>
-
 
 
 <div class="question" data-answer="b">
@@ -378,7 +436,6 @@ footer{text-align:center;margin-top:40px;padding:20px;color:#777}
 </div>
 
 
-
 <div class="question" data-answer="a">
 <h4>Q2. For 2 variables, total possible maxterms:</h4>
 <div class="options">
@@ -390,7 +447,6 @@ footer{text-align:center;margin-top:40px;padding:20px;color:#777}
 <button class="check-btn">Lock Answer</button>
 <div class="feedback"></div>
 </div>
-
 
 
 <div class="question" data-answer="d">
@@ -406,7 +462,6 @@ footer{text-align:center;margin-top:40px;padding:20px;color:#777}
 </div>
 
 
-
 <div class="question" data-answer="c">
 <h4>Q4. Canonical SOP form contains:</h4>
 <div class="options">
@@ -418,7 +473,6 @@ footer{text-align:center;margin-top:40px;padding:20px;color:#777}
 <button class="check-btn">Lock Answer</button>
 <div class="feedback"></div>
 </div>
-
 
 
 <div class="question" data-answer="a">
@@ -461,7 +515,6 @@ footer{text-align:center;margin-top:40px;padding:20px;color:#777}
 </section>
 
 
-
 <section id="references" class="section-page">
 <h3>References</h3>
 <ul>
@@ -487,7 +540,6 @@ footer{text-align:center;margin-top:40px;padding:20px;color:#777}
   </li>
 </ul>
 </section>
-
 
 
 <section id="contributors" class="section-page">
@@ -536,16 +588,13 @@ footer{text-align:center;margin-top:40px;padding:20px;color:#777}
 </section>
 
 
-
 </main>
 </div>
-
 
 
 <footer>
 <p>Virtual Labs © 2025</p>
 </footer>
-
 
 
 <script>
@@ -558,7 +607,6 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
     document.getElementById(btn.dataset.target).classList.add('active');
   };
 });
-
 
 
 /* MCQ check: lock answers, show correctness only after all attempted */
@@ -620,7 +668,6 @@ setupQuiz('pretest','pretest-score');
 setupQuiz('posttest','posttest-score');
 
 
-
 /* Logic */
 function variables(expr){return [...new Set(expr.match(/[A-D]/gi))].sort();}
 function evalExpr(expr,row){
@@ -668,7 +715,6 @@ function convert(){
   document.getElementById('table').innerHTML=showTable(t,vars);
 }
 </script>
-
 
 
 </body>
